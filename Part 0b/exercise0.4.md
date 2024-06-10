@@ -31,6 +31,8 @@ sequenceDiagram
     server->>browser: JSON data /exampleapp/data.json
     deactivate server
 
+    Note right of browser: Browser renders the data by appending data from json file into a list
+
     browser->>server: GET https://studies.cs.helsinki.fi/favicon.ico
     activate server
     server->>browser: Icon file /favicon.ico
