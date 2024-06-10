@@ -9,10 +9,14 @@ sequenceDiagram
     server ->>browser: HTML document /exampleapp/new_note
     deactivate server
 
+    Note right of browser: Data gets sent to the server
+
     browser->>server: GET "https://studies.cs.helsinki.fi/exampleapp/notes"
     activate server
     server->>browser: HTML document /exampleapp/notes
     deactivate server
+
+    Note right of browser: Browser refreshes page
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
     activate server
