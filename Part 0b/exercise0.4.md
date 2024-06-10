@@ -9,7 +9,7 @@ sequenceDiagram
     server ->>browser: HTML document /exampleapp/new_note
     deactivate server
 
-    browser->>server: GET "https://studies.cs.helsinki.fi/exampleapp/notes"
+    browser->>server: GET "https://studies.cs.helsinki.fi/exampleappnotes"
     activate server
     server->>browser HTML document /exampleapp/notes
     deactivate server
