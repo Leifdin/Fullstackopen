@@ -11,7 +11,7 @@ sequenceDiagram
 
     browser->>server: GET "https://studies.cs.helsinki.fi/exampleappnotes"
     activate server
-    server->>browser HTML document /exampleapp/notes
+    server->>browser HTML document /exampleappnotes
     deactivate server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
