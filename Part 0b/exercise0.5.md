@@ -21,8 +21,8 @@ sequenceDiagram
 
   browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
   activate server
-  server->>browser sends data for javascrip in json file
-  deactivate server:
+  server->>browser: sends data for javascrip in json file
+  deactivate server
   note right of browser: Browser request json file with data, so that it can render notes list using javascript
 
   browser->>server: GET https://studies.cs.helsinki.fi/favicon.ico
