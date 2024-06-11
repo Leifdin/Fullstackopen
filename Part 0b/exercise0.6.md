@@ -1,5 +1,5 @@
 ```mermaid
-SequenceDiagram
+sequenceDiagram
   participant browser
   participant server
 
