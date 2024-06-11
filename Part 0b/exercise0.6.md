@@ -1,3 +1,4 @@
+```mermaid
 SequenceDiagram
   participant broswer
   participant server
@@ -7,3 +8,4 @@ SequenceDiagram
   server->>browser: Server responds with 201: Created
   deactivate server
   note right of browser: browser doesn't refresh page as this behaviour is prevented by javascript, <br>instead redrawNotes() is called
+```
