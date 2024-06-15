@@ -3,6 +3,23 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: #fde799;
+}
+.display {
+  font-size: large;
+  font-weight: bold;
+}
+
+button {
+  border-style: none;
+  margin: 5px;
+  padding: 5px;
+  font-size: larger;
+  background-color: #2A0934;
+  color: #FCCB1A;
+}
+button:hover {
+  background-color: #8601AF;
 }
 
 .logo {
