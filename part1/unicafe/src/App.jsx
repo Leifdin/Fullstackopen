@@ -4,14 +4,20 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 const Button = ({text, handleClick}) => <button onClick={handleClick}>{text}</button>
+const StatisticLine = ({text, data}) => <p>{text}: {data}</p>
 
-const Stats = ({good, neutral, bad}) => {
+const Statistics = ({good, neutral, bad}) => {
   const total = good + neutral + bad
   if (total > 0) {
     return(
       <div>
         <h1>Statistics</h1>
-        <p>Good: {good} Neutral: {neutral} Bad: {bad}</p>
+        <StatisticLine text="Good" data={good} />
+        <StatisticLine text="Neutral" data={neutral} />
+        <StatisticLine text="Bad" data={bad} />
+        <StatisticLine text="Total" data={total} />
+        <StatisticLine text="Average" data={((good * 1) + (bad * -1)) / total} />
+        <StatisticLine text="Positive" data={[good / total * 100, ' %']} />
         <p>Total: {total}</p>
         <p>Average: {((good * 1) + (bad * -1)) / total}</p>
         <p>Positive: {good / total * 100}%</p>
@@ -21,7 +27,9 @@ const Stats = ({good, neutral, bad}) => {
   return (
     <div>
       <h1>Statistics</h1>
-        <p>Good: {good} Neutral: {neutral} Bad: {bad}</p>
+        <StatisticLine text="Good" data={good} />
+        <StatisticLine text="Neutral" data={neutral} />
+        <StatisticLine text="Bad" data={bad} />
         <p>No feedback given</p>
     </div>
   )
@@ -38,7 +46,7 @@ function App() {
       <Button text="Good" handleClick={()=>setGood(good + 1)} />
       <Button text="Neutral" handleClick={()=>setNeutral(neutral + 1)} />
       <Button text="Bad" handleClick={()=>setBad(bad + 1)} />
-      <Stats good={good} neutral={neutral} bad={bad} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
