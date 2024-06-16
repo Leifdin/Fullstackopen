@@ -4,7 +4,14 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 const Button = ({text, handleClick}) => <button onClick={handleClick}>{text}</button>
-const StatisticLine = ({text, data}) => <p>{text}: {data}</p>
+const StatisticLine = ({text, data}) =>{
+  return (
+    <tr>
+      <td>{text}:</td>
+      <td>{data}</td>
+    </tr>
+  )
+}
 
 const Statistics = ({good, neutral, bad}) => {
   const total = good + neutral + bad
@@ -12,25 +19,30 @@ const Statistics = ({good, neutral, bad}) => {
     return(
       <div>
         <h1>Statistics</h1>
-        <StatisticLine text="Good" data={good} />
-        <StatisticLine text="Neutral" data={neutral} />
-        <StatisticLine text="Bad" data={bad} />
-        <StatisticLine text="Total" data={total} />
-        <StatisticLine text="Average" data={((good * 1) + (bad * -1)) / total} />
-        <StatisticLine text="Positive" data={[good / total * 100, ' %']} />
-        <p>Total: {total}</p>
-        <p>Average: {((good * 1) + (bad * -1)) / total}</p>
-        <p>Positive: {good / total * 100}%</p>
+        <table>
+          <tbody>
+            <StatisticLine text="Good" data={good} />
+            <StatisticLine text="Neutral" data={neutral} />
+            <StatisticLine text="Bad" data={bad} />
+            <StatisticLine text="Total" data={total} />
+            <StatisticLine text="Average" data={((good * 1) + (bad * -1)) / total} />
+            <StatisticLine text="Positive" data={[good / total * 100, ' %']} />
+          </tbody>
+        </table>
       </div>
     )
   }
   return (
     <div>
       <h1>Statistics</h1>
-        <StatisticLine text="Good" data={good} />
-        <StatisticLine text="Neutral" data={neutral} />
-        <StatisticLine text="Bad" data={bad} />
-        <p>No feedback given</p>
+      <table>
+        <tbody>
+          <StatisticLine text="Good" data={good} />
+          <StatisticLine text="Neutral" data={neutral} />
+          <StatisticLine text="Bad" data={bad} />
+        </tbody>
+      </table>
+      <p>No feedback given</p>
     </div>
   )
 }
