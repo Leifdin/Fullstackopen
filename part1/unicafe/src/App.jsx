@@ -7,15 +7,23 @@ const Button = ({text, handleClick}) => <button onClick={handleClick}>{text}</bu
 
 const Stats = ({good, neutral, bad}) => {
   const total = good + neutral + bad
-  return(
+  if (total > 0) {
+    return(
+      <div>
+        <h1>Statistics</h1>
+        <p>Good: {good} Neutral: {neutral} Bad: {bad}</p>
+        <p>Total: {total}</p>
+        <p>Average: {((good * 1) + (bad * -1)) / total}</p>
+        <p>Positive: {good / total * 100}%</p>
+      </div>
+    )
+  }
+  return (
     <div>
       <h1>Statistics</h1>
-      <p>Good: {good} Neutral: {neutral} Bad: {bad}</p>
-      <p>Total: {total}</p>
-      <p>Average: {((good * 1) + (bad * -1)) / total}</p>
-      <p>Positive: {good / total * 100}%</p>
+        <p>Good: {good} Neutral: {neutral} Bad: {bad}</p>
+        <p>No feedback given</p>
     </div>
-    
   )
 }
 
