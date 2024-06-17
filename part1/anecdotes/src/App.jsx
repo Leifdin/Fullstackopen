@@ -20,15 +20,10 @@ const App = () => {
   const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
 
   const handleVote = () => {
-    const updateVotes = votes.map((vote, index) => {
-      if (index === selected) {
-        return vote + 1;
-      }
-      else {
-        return vote;
-      }
-    });
-    setVotes(updateVotes)
+    const updatedVotes = [... votes]
+    updatedVotes[selected] += 1
+    console.log(selected, votes, updatedVotes)
+    setVotes(updatedVotes)
   }
   const handleNext = () => {
     setSelected(Math.floor(anecdotes.length * Math.random()))
