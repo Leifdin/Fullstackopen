@@ -4,6 +4,15 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
+const Anecdote = ({heading, anecdote}) => {
+  return (
+    <div>
+    <h1>{heading}</h1>
+    <p>{anecdote}</p>
+    </div>
+  )
+
+}
 
 const App = () => {
   const anecdotes = [
@@ -18,11 +27,15 @@ const App = () => {
   ]
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
+  const [mostVotes, setMostVotes] = useState(0)
 
   const handleVote = () => {
     const updatedVotes = [... votes]
     updatedVotes[selected] += 1
     console.log(selected, votes, updatedVotes)
+    if (updatedVotes[selected] > updatedVotes[mostVotes]) {
+      setMostVotes(selected)
+    }
     setVotes(updatedVotes)
   }
   const handleNext = () => {
@@ -31,10 +44,11 @@ const App = () => {
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
+      <Anecdote heading="Anecdote of the Day" anecdote={anecdotes[selected]} />´
       <p>Votes: {votes[selected]}</p>
       <Button handleClick={handleVote} text='Vote' />
       <Button handleClick={handleNext} text='Next' />
+      <Anecdote heading ="Anecdote with most votes" anecdote={anecdotes[mostVotes]} />
     </div>
   )
 }
