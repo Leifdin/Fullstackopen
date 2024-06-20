@@ -29,7 +29,7 @@ const Total = ({course}) => {
   const total = course.parts.reduce((accumulator, currentValue) => {
     /*console.log('Accumulator: ', accumulator, 'currentValue: ', currentValue.exercises)*/
     return (accumulator + currentValue.exercises)
-  }, 10)
+  }, 0)
   return(
     <div>
       <p>Number of exercises: {total}</p>
