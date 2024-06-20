@@ -7,8 +7,7 @@ const Header = (props) => {
 }
 
 const Part = ({partName, exercisesCount}) => {
-
-
+  console.log('Rendering ', partName, exercisesCount)
   return(
     <p>{partName} has {exercisesCount} exercises</p>
   )
@@ -17,12 +16,7 @@ const Part = ({partName, exercisesCount}) => {
 const Content = (props) => {
   return(
     <div>
-    {props.course.parts.map((coursePart) => {
-      console.log('Rendering ', coursePart.name, coursePart.exercises)
-      return (
-        <Part key={coursePart.id} partName={coursePart.name} exercisesCount={coursePart.exercises} />
-      )
-    }
+    {props.course.parts.map((coursePart) => <Part key={coursePart.id} partName={coursePart.name} exercisesCount={coursePart.exercises} />
     )}
     </div>
   )
