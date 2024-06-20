@@ -1,54 +1,5 @@
-const Header = (props) => {
-  return(
-    <div>
-      <h2>{props.course.name}</h2>
-    </div>
-  )
-}
+import Course from './components/Course.jsx'
 
-const Part = ({partName, exercisesCount}) => {
-
-
-  return(
-    <p>{partName} has {exercisesCount} exercises</p>
-  )
-}
-
-const Content = (props) => {
-  return(
-    <div>
-    {props.course.parts.map((coursePart) => {
-      console.log('Rendering ', coursePart.name, coursePart.exercises)
-      return (
-        <Part key={coursePart.id} partName={coursePart.name} exercisesCount={coursePart.exercises} />
-      )
-    }
-    )}
-    </div>
-  )
-}
-
-const Total = ({course}) => {
-  const total = course.parts.reduce((accumulator, currentValue) => {
-    console.log('Accumulator: ', accumulator, 'currentValue: ', currentValue.exercises)
-    return (accumulator + currentValue.exercises)
-  }, 0)
-  return(
-    <div>
-      <p>Number of exercises: {total}</p>
-    </div>
-  )
-}
-
-const Course = ({course}) => {
-  return (
-    <div>
-      <Header course={course} />
-      <Content course={course} />
-      <Total course={course} />
-    </div>
-  )
-}
 
 const App = () => {
   const courses = [
@@ -98,7 +49,7 @@ const App = () => {
   return (
     <div>
       <h1>Web development curriculum</h1>
-      {courses.map((course) => <Course course={course} />)}
+      {courses.map((course) => <Course key={course.id} course={course} />)}
     </div>
   )
 }
