@@ -14,11 +14,27 @@ const App = () => {
   const [persons, setPersons] = useState([{name: 'Pavol Polonec'}, {name: 'Veronika Smrtníková'}])
   const [newName, setNewName] = useState('')
 
+  const checkName = () => {
+    persons.map((person) => {
+      if (person.name === newName){
+        return true
+      }
+    })
+    return false
+  }
+
   const addPerson = (event) => {
     event.preventDefault()
-    const personObject = {name: newName}
-    setPersons(persons.concat(personObject))
-    setNewName('')
+    if (checkName()) {
+      const personObject = {name: newName}
+      console.log(checkName())
+      setPersons(persons.concat(personObject))
+      setNewName('')
+    } else{
+      console.log(`${newName} already exists in the phonebook`)
+      alert(`${newName} already exists in the phonebook`)
+    }
+
   }
 
   const handlePersonChange = (event) => {
