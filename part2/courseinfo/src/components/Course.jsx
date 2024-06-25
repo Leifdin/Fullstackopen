@@ -7,9 +7,12 @@ const Header = (props) => {
 }
 
 const Part = ({partName, exercisesCount}) => {
-  console.log('Rendering ', partName, exercisesCount)
+
   return(
+    <>
+    {console.log('Rendering ', partName, exercisesCount)}
     <p>{partName} has {exercisesCount} exercises</p>
+    </>
   )
 }
 
@@ -24,7 +27,7 @@ const Content = (props) => {
 
 const Total = ({course}) => {
   const total = course.parts.reduce((accumulator, currentValue) => {
-    console.log('Accumulator: ', accumulator, 'currentValue: ', currentValue.exercises)
+    /*console.log('Accumulator: ', accumulator, 'currentValue: ', currentValue.exercises)*/
     return (accumulator + currentValue.exercises)
   }, 0)
   return(
