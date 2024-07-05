@@ -24,20 +24,25 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchString, setSearchString] = useState('')
 
-  const checkName = () => {
-    let canAdd = true
-    persons.map((person) => {
+  const canAdd = () => {
+    let isInPhonebook = persons.some((person) => {
+      console.log(person.name, newName, person.name === newName)
+      return (person.name === newName)
+    })
+    /*persons.map((person) => {
       console.log(person.name, newName, person.name === newName)
       if (person.name === newName){
         canAdd = false
       }
     })
-    return canAdd
+    */
+
+    return !isInPhonebook
   }
 
   const addPerson = (event) => {
     event.preventDefault()
-    if (checkName()) {
+    if (canAdd()) {
       const personObject = {name: newName, number: newNumber, id: persons.length + 1}
       /*console.log(checkName())*/
       setPersons(persons.concat(personObject))
