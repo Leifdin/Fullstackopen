@@ -20,6 +20,21 @@ const SearchField = ({searchField, handleSearchField}) => {
   )
 
 }
+
+const NewPerson = ({submitFunction, newName, handlePersonChange, newNumber, handleNumberChange}) => {
+  return (
+    <form onSubmit={submitFunction}>
+    <div>
+      name: <input value={newName} onChange={handlePersonChange} />
+      number: <input value={newNumber} onChange={handleNumberChange} />
+    </div>
+    <div>
+      <button type="submit" >Add</button>
+    </div>
+  </form>
+  )}
+  
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -38,8 +53,6 @@ const App = () => {
       */
       return person.name.toLowerCase().includes(searchString.toLowerCase())
     })
-  
-
   const canAdd = () => {
     let isInPhonebook = persons.some((person) => {
       console.log(person.name, newName, person.name === newName)
@@ -55,7 +68,6 @@ const App = () => {
 
     return !isInPhonebook
   }
-
   const addPerson = (event) => {
     event.preventDefault()
     if (canAdd()) {
@@ -70,14 +82,12 @@ const App = () => {
     }
 
   }
-
   const handlePersonChange = (event) => {
     setNewName(event.target.value)
   }
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
-
   const handleSearchFieldChange = (event) => {
     setSearchString(event.target.value)
     console.log(filterPersons)
@@ -88,7 +98,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <SearchField searchField={searchString} handleSearchField={handleSearchFieldChange} />
 
-      <form onSubmit={addPerson}>
+      {/*<form onSubmit={addPerson}>
         <div>
           name: <input value={newName} onChange={handlePersonChange} />
           number: <input value={newNumber} onChange={handleNumberChange} />
@@ -96,7 +106,8 @@ const App = () => {
         <div>
           <button type="submit" >Add</button>
         </div>
-      </form>
+      </form>*/}
+      <NewPerson submitFunction={addPerson} newName={newName} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
       <Phonebook numbers={filterPersons} />
       <div>debug: {newName} number:{newNumber}</div>
