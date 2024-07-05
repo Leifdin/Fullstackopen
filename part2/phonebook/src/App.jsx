@@ -12,7 +12,14 @@ const Phonebook = ({numbers}) => {
   )
 }
 
+const SearchField = ({searchField, handleSearchField}) => {
+  return (
+    <div>
+        filter: <input value={searchField} onChange={handleSearchField} />
+    </div>
+  )
 
+}
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -23,6 +30,15 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchString, setSearchString] = useState('')
+
+  const filterPersons = persons.filter((person) => {
+    /*
+      console.log(person.name.toLowerCase(), searchString.toLowerCase())
+      console.log(person.name.toLowerCase().includes(searchString.toLowerCase()))
+      */
+      return person.name.toLowerCase().includes(searchString.toLowerCase())
+    })
+  
 
   const canAdd = () => {
     let isInPhonebook = persons.some((person) => {
@@ -64,14 +80,14 @@ const App = () => {
 
   const handleSearchFieldChange = (event) => {
     setSearchString(event.target.value)
+    console.log(filterPersons)
   }
 
   return(
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter: <input value={searchString} onChange={handleSearchFieldChange} />
-      </div>
+      <SearchField searchField={searchString} handleSearchField={handleSearchFieldChange} />
+
       <form onSubmit={addPerson}>
         <div>
           name: <input value={newName} onChange={handlePersonChange} />
@@ -82,7 +98,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <Phonebook numbers={persons} />
+      <Phonebook numbers={filterPersons} />
       <div>debug: {newName} number:{newNumber}</div>
     </div>
   )
