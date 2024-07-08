@@ -13,23 +13,43 @@ const App = (props) => {
   const [showAll, setShowAll] = useState(true)
 
   useEffect(() => {
+    /*
     console.log('effect')
+    */
     axios
     .get('http://localhost:3001/notes')
     .then(response => {
+      /*
       console.log('Promise fulfilled')
+      */
       setNotes(response.data)
     })
   }, [])
+  /*
   console.log('render', notes.length, 'notes')
+  */
 
+  const toggleImportanceOf = (id) => {
+    /*
+    console.log(`The importance of ${id} needs to be toggled`)
+    */
+    const url = `http://localhost:3001/notes/${id}`
+    const note = notes.find(n => n.id === id)
+    const updatedNote = { ...note, important: !note.important}
+    axios.put(url, updatedNote).then(response =>
+      setNotes(notes.map(n => n.id != id ? n : response.data))
+    )
+  }
+  
   const notesToShow = showAll
   ? notes
   : notes.filter(note => note.important)
 
   const addNote = (event) => {
     event.preventDefault()
+    /*
     console.log('Button clicked', event.target)
+    */
     const noteObject = {
       content: newNote,
       important: Math.random() <0.5
@@ -41,13 +61,17 @@ const App = (props) => {
     axios
     .post('http://localhost:3001/notes', noteObject)
     .then(response => {
+      /*
       console.log(response)
+      */
       setNotes(notes.concat(response.data))
       setNewNote('')
     })
   }
   const handleNoteChange = (event) => {
+    /*
     console.log(event.target.value)
+    */
     setNewNote(event.target.value)
   }
 
@@ -55,7 +79,12 @@ const App = (props) => {
     <div>
       <h1>Notes</h1>
       <ul>
-        {notesToShow.map(note => <Note key={note.id} note={note.content} />)}
+        {notesToShow.map(note =>
+          <Note 
+          key={note.id} 
+          note={note}
+          toggleImportance={() => toggleImportanceOf(note.id)} 
+          />)}
       </ul>
       <div>
         <button onClick={() => setShowAll(!showAll)}>
