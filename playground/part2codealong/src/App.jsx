@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Note from './components/Note.jsx'
-import axios from 'axios'
+import noteService from './services/notes'
 
 
 
@@ -16,13 +16,10 @@ const App = (props) => {
     /*
     console.log('effect')
     */
-    axios
-    .get('http://localhost:3001/notes')
-    .then(response => {
-      /*
-      console.log('Promise fulfilled')
-      */
-      setNotes(response.data)
+    noteService
+    .getAll()
+    .then(initialNotes => {
+      setNotes(initialNotes)
     })
   }, [])
   /*
@@ -30,15 +27,20 @@ const App = (props) => {
   */
 
   const toggleImportanceOf = (id) => {
-    /*
-    console.log(`The importance of ${id} needs to be toggled`)
-    */
-    const url = `http://localhost:3001/notes/${id}`
     const note = notes.find(n => n.id === id)
     const updatedNote = { ...note, important: !note.important}
-    axios.put(url, updatedNote).then(response =>
-      setNotes(notes.map(n => n.id != id ? n : response.data))
-    )
+
+    noteService
+    .update(id, updatedNote)
+    .then(returnedNote => {
+      setNotes(notes.map(n => n.id != id ? n : returnedNote))
+    })
+    .catch(error => {
+      alert(
+        `The note '${note.content}' was already deleted from the server`
+      )
+      setNotes(notes.filter(n => n.id != id))
+    })
   }
   
   const notesToShow = showAll
@@ -58,13 +60,10 @@ const App = (props) => {
     setNotes(notes.concat(noteObject))
     setNewNote('')
     */
-    axios
-    .post('http://localhost:3001/notes', noteObject)
-    .then(response => {
-      /*
-      console.log(response)
-      */
-      setNotes(notes.concat(response.data))
+    noteService
+    .create(noteObject)
+    .then(returnedNote => {
+      setNotes(notes.concat(returnedNote))
       setNewNote('')
     })
   }
