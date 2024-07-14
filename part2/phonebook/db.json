@@ -1,44 +1,24 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": "1"
-    },
-    {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": "2"
-    },
-    {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": "3"
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": "4"
-    },
-    {
-      "id": "6d18",
-      "name": "Pavol Polonec",
-      "number": "4"
-    },
-    {
-      "id": "e62b",
-      "name": "Veronika Smrtníková",
-      "number": "85"
-    },
-    {
-      "id": "4413",
-      "name": "Jano Slimák",
+      "id": "ed68",
+      "name": "Janko",
       "number": "45"
     },
     {
-      "id": "8dbd",
-      "name": "František Gajdoš",
-      "number": "41"
+      "id": "21b5",
+      "name": "Ferko",
+      "number": "6"
+    },
+    {
+      "id": "701e",
+      "name": "Leifič",
+      "number": "777"
+    },
+    {
+      "id": "39b1",
+      "name": "Gejza Vámoš",
+      "number": "45615"
     }
   ]
 }

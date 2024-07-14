@@ -1,14 +1,25 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
 
-const Person = ({person}) => {
-  return <p>{person.id} Name: {person.name} Number: {person.number}</p>
+const Person = ({person, deletePerson}) => {
+  return (
+  <li>
+    {person.id} Name: {person.name} Number: {person.number}
+    <button onClick={deletePerson}>Delete</button>
+  </li>
+  )
 }
 
-const Phonebook = ({numbers}) => {
+const Phonebook = ({numbers, handleDelete}) => {
+  
   return (
     <div>
-      {numbers.map(person => <Person key={person.id} person={person} />)}
+      {numbers.map(person => 
+        <Person 
+        key={person.id} 
+        person={person}
+        deletePerson={() => handleDelete(person.id)}
+        />)}
     </div>
   )
 }
@@ -80,16 +91,6 @@ const App = () => {
     event.preventDefault()
     if (canAdd()) {
       const personObject = {name: newName, number: newNumber}
-      /*console.log(checkName())*/
-      /*
-      axios
-      .post('http://localhost:3001/persons', personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
-        setNewName('')
-        setNewNumber('')
-      })
-      */
      personService
      .create(personObject)
      .then(returnedPerson => {
@@ -114,6 +115,17 @@ const App = () => {
     setSearchString(event.target.value)
     console.log(filterPersons)
   }
+  const handleDeletePerson = (id) => {
+    const personToDelete = persons.find(person => person.id === id)
+    console.log(`Person with name ${personToDelete.name} and ${personToDelete.id} will be deleted`)
+    personService
+    .remove(personToDelete.id)
+    .then(returnedPerson => {
+      setPersons(persons.filter(person => person.id !== returnedPerson.id))
+      console.log(`Person ${returnedPerson.id} ${returnedPerson.name} deleted`)
+    })
+  }
+  
 
   return(
     <div>
@@ -131,7 +143,7 @@ const App = () => {
       </form>*/}
       <NewPerson submitFunction={addPerson} newName={newName} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <Phonebook numbers={filterPersons} />
+      <Phonebook numbers={filterPersons} handleDelete={handleDeletePerson} />
       <div>debug: {newName} number:{newNumber}</div>
     </div>
   )
