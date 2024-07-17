@@ -118,12 +118,15 @@ const App = () => {
   const handleDeletePerson = (id) => {
     const personToDelete = persons.find(person => person.id === id)
     console.log(`Person with name ${personToDelete.name} and ${personToDelete.id} will be deleted`)
-    personService
-    .remove(personToDelete.id)
-    .then(returnedPerson => {
-      setPersons(persons.filter(person => person.id !== returnedPerson.id))
-      console.log(`Person ${returnedPerson.id} ${returnedPerson.name} deleted`)
-    })
+    if (window.confirm(`Delete ${personToDelete.name} from phonebook?`)) {
+      personService
+      .remove(personToDelete.id)
+      .then(returnedPerson => {
+        setPersons(persons.filter(person => person.id !== returnedPerson.id))
+        console.log(`Person ${returnedPerson.id} ${returnedPerson.name} deleted`)
+      })
+    }
+    
   }
   
 
