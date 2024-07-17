@@ -99,9 +99,22 @@ const App = () => {
       setNewNumber('')
     })
       
-    } else{
+    } else {
       console.log(`${newName} already exists in the phonebook`)
-      alert(`${newName} already exists in the phonebook`)
+      if (window.confirm(`${newName} already exists in the phonebook, do you want to update number?`)){
+        const personToUpdate = persons.find(person => person.name === newName)
+        const personObject = {id: personToUpdate.id, name: personToUpdate.name, number: newNumber}
+        personService
+        .update(personToUpdate.id, personObject)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => {
+            return (person.id === returnedPerson.id ? returnedPerson : person)
+          }))
+          setNewName('')
+          setNewNumber('')
+        })
+
+      }
     }
 
   }
