@@ -47,11 +47,24 @@ const NewPerson = ({submitFunction, newName, handlePersonChange, newNumber, hand
   )}
   
 
+const Message = ({ message, messageType}) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className={messageType}>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchString, setSearchString] = useState('')
+  const [message, setMessage] = useState('')
+  const [messageType, setMessageType] = useState('')
 
   useEffect(() => {
     personService
@@ -64,6 +77,29 @@ const App = () => {
     })
     */
   }, [])
+
+  const displayMessage = (messageToDisplay, timeToDisplay) => {
+    setMessage(messageToDisplay)
+    setMessageType('successMessage')
+    setTimeout(() => {
+      setMessage('')
+      setMessageType('')
+    }, timeToDisplay)
+  }
+  const displayError = (errorToDisplay, timeToDisplay) => {
+    setMessage(errorToDisplay)
+    setMessageType('errorMessage')
+    setTimeout(() => {
+      setMessage('')
+      setMessageType('')
+    }, timeToDisplay)
+  }
+  /*
+  useEffect(() => {
+    displayError('Hello!', 3000)
+  }, [])
+  */
+  
 
   const filterPersons = persons.filter((person) => {
     /*
@@ -97,6 +133,7 @@ const App = () => {
       setPersons(persons.concat(returnedPerson))
       setNewName('')
       setNewNumber('')
+      displayMessage(`${returnedPerson.name} has been successfully added`, 2000)
     })
       
     } else {
@@ -112,6 +149,10 @@ const App = () => {
           }))
           setNewName('')
           setNewNumber('')
+          displayMessage(`${returnedPerson.name}'s number has been changed to ${returnedPerson.number}`, 2000)
+        })
+        .catch(error => {
+          displayError(`${personToUpdate.name} is not on the server`, 3000)
         })
 
       }
@@ -138,13 +179,19 @@ const App = () => {
         setPersons(persons.filter(person => person.id !== returnedPerson.id))
         console.log(`Person ${returnedPerson.id} ${returnedPerson.name} deleted`)
       })
+      .catch(error => {
+        console.log('Cannot delete non existent entry')
+        displayError(`${personToDelete.name} is not on the server`, 3000)
+      })
     }
     
   }
+
   
 
   return(
     <div>
+      <Message message={message} messageType={messageType} />
       <h2>Phonebook</h2>
       <SearchField searchField={searchString} handleSearchField={handleSearchFieldChange} />
 
