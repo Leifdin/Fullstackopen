@@ -1,60 +1,25 @@
 import { useEffect, useState } from "react"
 import countriesService from '../services/countries.js'
+import CountryReport from './CountryReport'
 
-const WeatherReport = ( {city, latitude, longitude}) => {
-    const [weatherData, setWeatherData] = useState(null)
-    useEffect(() => {
-    countriesService
-    .getWeather(latitude, longitude)
-    .then(fetchedData => setWeatherData(fetchedData))
-    }, [])
-    if(weatherData) {
-        return(
-            <div>
-                <h1>Weather in {city}</h1>
-                <p>Temperature: {weatherData.main.temp}˚C</p>
-                <img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} />
-                <p>Wind: {weatherData.wind.speed} km/h</p>
-            </div>
-        )
-    }
-}
 
 const Country = ( {displayCountry, showCountryDetails}) => {
     const [showDetails, setShowDetails] = useState(showCountryDetails)
-    if (showDetails) {
-        const countryLanguages = Object
-        .values(displayCountry.languages)
-        .map(language => <li key={language}>{language}</li>)
-        const buttonText = showDetails? "Show details" : "Hide details"
-        console.log(buttonText)
-        return (
-            <div>
-                <div>
-                    <h1>{displayCountry.name.common}</h1>
-                    <p>Capital: {displayCountry.capital[0]}</p>
-                    <p>Population: {displayCountry.area}</p>
-                    <h2>Languages:</h2>
-                    <ul>
-                        {countryLanguages}
-                    </ul>
-                    <img src={displayCountry.flags.svg} alt={displayCountry.flags.alt} width={100} />
-                </div>
-                <WeatherReport 
-                city={displayCountry.capital[0]}
-                latitude={displayCountry.latlng[0]}
-                longitude={displayCountry.latlng[1]}
-                />
-                
-                <button onClick={()=> setShowDetails(0)}>Hide</button>
-            </div>
-        )
-    }
+    const [renderCount, setRenderCount] = useState(0)
+    const buttonText = showDetails? "Hide details" : "Show details"
+    /*setRenderCount(renderCount + 1)
+    console.log(renderCount)
+    */
     return (
         <div>
-            <li>{displayCountry.name.common}</li>
-            <button onClick={()=> setShowDetails(1)}>Show</button>
+            <CountryReport 
+            displayCountry={displayCountry}
+            showCountryDetails={showDetails}
+            />
+            <button onClick={() => setShowDetails(!showDetails)}>{buttonText}</button>
         </div>
+        
+
     )
 }
 const CountriesList = ( {data, searchFilter}) => {
@@ -76,7 +41,7 @@ const CountriesList = ( {data, searchFilter}) => {
 
     if (displayCountries.length === 1) {
         return (
-            <Country displayCountry={displayCountries[0]} showCountryDetails="0" />
+            <Country displayCountry={displayCountries[0]} showCountryDetails="false" />
         )
     }
     
