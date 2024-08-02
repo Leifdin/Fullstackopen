@@ -15,6 +15,7 @@ const Country = ( {displayCountry, format}) => {
                 <ul>
                     {countryLanguages}
                 </ul>
+                <img src={displayCountry.flags.svg} alt={displayCountry.flags.alt} width={100} />
             </div>
         )
     }
