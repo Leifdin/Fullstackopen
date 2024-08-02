@@ -6,6 +6,7 @@ import countriesService from './services/countries.js'
 function App() {
   const [searchFieldContent, setSeachFieldContent] = useState('')
   const [countriesData, setCountriesData] = useState([])
+  const apiKey=import.meta.env.VITE_OPENWEATHER_API_KEY
 
   useEffect(() => {
     countriesService
@@ -20,7 +21,7 @@ function App() {
   return (
     <div>
       <SearchField text={searchFieldContent} handleSearchField={handleSearchField} />
-      <CountriesList data={countriesData} searchFilter={searchFieldContent}/>
+      <CountriesList data={countriesData} searchFilter={searchFieldContent} weatherApiKey={apiKey}/>
     </div>
   )
 }
