@@ -44,13 +44,14 @@ app.delete('/api/notes/:id', (request, response) => {
     const id = request.params.id
     notes = notes.filter(note => note.id !== id)
     response.status(204).end()
-    return String(maxId + 1)
+    
 })
 
 const generateId = () => {
     const maxId = notes.length > 0
     ? Math.max(...notes.map(n => Number(n.id)))
     : 0
+    return String(maxId + 1)
 }
 
 app.post('/api/notes', (request, response) => {
