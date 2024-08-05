@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf dist && cd /home/pp/react/Fullstackopen/playground/part2codealong && npm run build && rsync -avz dist /home/pp/react/Fullstackopen/part3/StudyMaterial/",
+    "deploy": "rsync -avz /home/pp/react/Fullstackopen/part3/StudyMaterial/ ppolonec@164.90.186.10:notes/"
   },
   "author": "Pavol Polonec",
   "license": "ISC",
