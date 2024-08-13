@@ -1,7 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require ('cors')
-const person = require('./models/person.js')
+const Person = require('./models/person.js')
 //const note = require('../StudyMaterial/models/note')
 const app = express()
 
@@ -19,29 +19,31 @@ app.use(express.static('dist'))
 
 
 app.get('/api/persons', (request, response) => {
-    person.find({}).then(persons => {
+    Person.find({}).then(persons => {
       response.json(persons)
     })
 })
 
 app.get('/info', (request, response) => {
-    response.send(`
+    Person.find({}).then(persons => {
+      response.send(`
         <p>Phonebook has info for ${persons.length} people</p>
         <p>${new Date().toString()}`)
-})
+      })
+    })
+    
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  const person = persons.find(person => person.id === id)
-  if (person) {
-    //response.json(person)
-    response.send(`
-      <h1>${person.name}</h1>
-      <p>Number: ${person.number}</p>
-      `)
-  } else {
-    response.status(404).send('404: That person does not exist')
-  }
+  console.log(request.params.id)
+  Person.findById(request.params.id).then(person => {
+    if(person){
+      response.json(person)
+    }
+    else{
+      response.status(404).send('404: That person does not exist')
+    }
+    
+  })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
