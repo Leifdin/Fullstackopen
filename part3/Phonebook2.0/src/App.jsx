@@ -135,6 +135,11 @@ const App = () => {
       setNewNumber('')
       displayMessage(`${returnedPerson.name} has been successfully added`, 2000)
     })
+    .catch(error => {
+      console.log(error.message)
+      displayError(`Please fill name and number`, 5000)
+
+    })
       
     } else {
       console.log(`${newName} already exists in the phonebook`)

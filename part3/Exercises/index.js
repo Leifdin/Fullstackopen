@@ -112,6 +112,22 @@ app.post('/api/persons', (request, response) => {
   
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+  console.log(`person to update data: ${body.name} ${body.number}`)
+  if (!body.name || !body.number){
+    return response.status(400).json({ error: 'Name or number missing' })
+  }
+
+  Person.findByIdAndUpdate(request.params.id, {number: body.number}, {lean: true, returnDocument: 'after'})
+  .then(result => {
+    console.log(result)
+    return response.json(new Person(result))
+  }
+    
+  )
+})
+
 app.use(errorHandler)
 
 const PORT = 3001
