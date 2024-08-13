@@ -11,7 +11,7 @@ const url = `mongodb+srv://pavolpolonec:${password}@cluster0.dyptt.mongodb.net/?
 mongoose.set('strictQuery', false)
 
 mongoose.connect(url)
-
+/*
 const noteSchema = new mongoose.Schema({
     content: String,
     important: Boolean
@@ -37,3 +37,4 @@ Note.find({ important: true }).then(result => {
     })
     mongoose.connection.close()
 })
+mongoose.connection.close()
