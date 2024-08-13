@@ -12,6 +12,15 @@ morgan.token('body', (req, res) => {
   return JSON.stringify(req.body)
 })
 
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message)
+
+  if(error.name === 'CastError'){
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+  next(error)
+}
+
 app.use(express.json())
 app.use(morgan(':method :url :id :response-time :body'))
 app.use(cors())
@@ -33,7 +42,7 @@ app.get('/info', (request, response) => {
     })
     
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   console.log(request.params.id)
   Person.findById(request.params.id)
   .then(person => {
@@ -45,10 +54,7 @@ app.get('/api/persons/:id', (request, response) => {
     }
     
   })
-  .catch(error => {
-    console.log(error)
-    response.status(500).end()
-  })
+  .catch(error => next(error))
 })
 /*
 app.delete('/api/persons/:id', (request, response) => {
@@ -61,7 +67,7 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
   */
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   let personToDelete
   Person.findById(request.params.id)
   .then(person => {
@@ -71,16 +77,14 @@ app.delete('/api/persons/:id', (request, response) => {
     else{
       response.status(404).send({ error: '404: That person does not exist' })
     }
-  })
+  }).catch(error => next(error))
+
   Person.deleteOne({ _id: request.params.id} )
   .then(person => {
     console.log(`Deleted ${person.deletedCount} entries`)
     response.json(personToDelete)
   })
-  .catch(error => {
-    console.log(error)
-    response.status(204).end()
-  })
+  .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response) => {
@@ -107,6 +111,8 @@ app.post('/api/persons', (request, response) => {
   })
   
 })
+
+app.use(errorHandler)
 
 const PORT = 3001
 app.listen(PORT)
