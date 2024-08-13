@@ -137,7 +137,7 @@ const App = () => {
     })
     .catch(error => {
       console.log(error.message)
-      displayError(`Please fill name and number`, 5000)
+      displayError(error.response.data.error, 3000)
 
     })
       
@@ -157,7 +157,7 @@ const App = () => {
           displayMessage(`${returnedPerson.name}'s number has been changed to ${returnedPerson.number}`, 2000)
         })
         .catch(error => {
-          displayError(`${personToUpdate.name} is not on the server`, 3000)
+          displayError(error.response.data.error, 3000)
         })
 
       }
