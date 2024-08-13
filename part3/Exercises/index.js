@@ -35,17 +35,22 @@ app.get('/info', (request, response) => {
 
 app.get('/api/persons/:id', (request, response) => {
   console.log(request.params.id)
-  Person.findById(request.params.id).then(person => {
+  Person.findById(request.params.id)
+  .then(person => {
     if(person){
       response.json(person)
     }
     else{
-      response.status(404).send('404: That person does not exist')
+      response.status(404).send({ error: '404: That person does not exist' })
     }
     
   })
+  .catch(error => {
+    console.log(error)
+    response.status(500).end()
+  })
 })
-
+/*
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
   personToDelete = persons.find(person => person.id === id)
@@ -55,6 +60,28 @@ app.delete('/api/persons/:id', (request, response) => {
   }
   response.status(204).end()
 })
+  */
+app.delete('/api/persons/:id', (request, response) => {
+  let personToDelete
+  Person.findById(request.params.id)
+  .then(person => {
+    if(person){
+      personToDelete = person
+    }
+    else{
+      response.status(404).send({ error: '404: That person does not exist' })
+    }
+  })
+  Person.deleteOne({ _id: request.params.id} )
+  .then(person => {
+    console.log(`Deleted ${person.deletedCount} entries`)
+    response.json(personToDelete)
+  })
+  .catch(error => {
+    console.log(error)
+    response.status(204).end()
+  })
+})
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
@@ -63,20 +90,22 @@ app.post('/api/persons', (request, response) => {
       error: 'Name or number missing'
     })
   }
+  /*
   if (persons.find (person => person.name === body.name)) {
     return response.status(400).json({
       error: `${body.name} already exists in the phonebook`
     })
   }
-
-  const person = {
-    id: String(Math.ceil(Math.random()*100000)),
+  */
+  const person = new Person({
     name: body.name,
     number: body.number
-  }
+  })
   //console.log(person)
-  persons = persons.concat(person)
-  response.json(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+  
 })
 
 const PORT = 3001
