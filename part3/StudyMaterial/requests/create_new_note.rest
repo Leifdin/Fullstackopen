@@ -2,6 +2,6 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-    "content": "I was using curl, now I am using VS code REST thingy",
-    "important": true
+    "content": "Cítim vôňu lesa",
+    "important": false
 }
