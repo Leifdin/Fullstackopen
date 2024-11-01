@@ -1,19 +1,4 @@
 const mongoose = require('mongoose')
-require('dotenv').config()
-const url = process.env.MONGODB_URI;
-console.log(url)
-mongoose.set('strictQuery', false)
-
-console.log(`Connecting to ${url}`)
-
-mongoose.connect(url)
-.then(result => {
-    console.log('Connected to MongoDB')
-})
-.catch(error => {
-    console.log(`error connecting to mongodb: ${error.message}`)
-})
-
 
 const noteSchema = new mongoose.Schema({
     content: String,
