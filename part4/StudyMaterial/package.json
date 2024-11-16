@@ -4,12 +4,11 @@
   "description": "Study material for Fullstack open part3",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
     "build:ui": "rm -rf dist && cd /home/pp/react/Fullstackopen/playground/part2codealong && npm run build && rsync -avz dist /home/pp/react/Fullstackopen/part3/StudyMaterial/",
     "deploy": "rsync -avz /home/pp/react/Fullstackopen/part3/StudyMaterial/ ppolonec@164.90.186.10:notes/",
-    "test": "node --test"
+    "test": "NODE_ENV=test node --test"
   },
   "author": "Pavol Polonec",
   "license": "ISC",
@@ -20,6 +19,7 @@
     "mongoose": "^8.5.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "supertest": "^7.0.0"
   }
 }
