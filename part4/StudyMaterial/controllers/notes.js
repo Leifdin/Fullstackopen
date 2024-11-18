@@ -12,17 +12,15 @@ notesRouter.get('/', async (request, response) => {
 notesRouter.get('/:id', async (request, response, next) => {
   const note = await Note.findById(request.params.id)
   if (note) {
-    if (note) {
-      response.json(note)
-    } else {
-      response.status(404).end()
-    }
+    response.json(note)
+  } else {
+    response.status(404).end()
   }
 
 })
 
 
-notesRouter.delete('/:id', async (request, response, next) => {
+notesRouter.delete('/:id', async (request, response) => {
   await Note.findByIdAndDelete(request.params.id)
   response.status(204).end()
 })
