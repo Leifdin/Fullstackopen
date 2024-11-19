@@ -2,6 +2,8 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-    "content": "Cítim vôňu lesa",
-    "important": false
+    "content": "Dalsia poznamka",
+    "important": true,
+    "userId": "673cb7704c8bfc232a71a2fe"
+    
 }
