@@ -2,17 +2,8 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const defaultBlog = require('../models/defaultBlog')
-const jwt = require('jsonwebtoken')
+const _  = require('lodash')
 require('express-async-errors')
-
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')){
-    return authorization.replace('Bearer ', '')
-  }
-  return null
-}
-
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -26,18 +17,15 @@ blogsRouter.get('/:id', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
 
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-  if(!decodedToken.id){
-    return response.status(401).json({ error: 'invalid token' })
-  }
+  const user = await User.findById(request.user.id)
 
-
-  const user = await User.findById(decodedToken.id)
-  
 
   const body = request.body
-
-  console.log(body)
+  if (!body.author) {
+    return response.status(400).json({
+      error: 'Author missing'
+    })
+  }
   if (!body.title) {
     return response.status(400).json({
       error: 'Title missing'
@@ -57,7 +45,21 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndDelete(request.params.id)
+  // const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  // if (!decodedToken.id) {
+  //   return response.status(401).json({ error: 'invalid token' })
+  // }
+  const user = await User.findById(request.user.id)
+  const blog = await Blog.findById(request.params.id)
+  if(!blog){
+    return response.status(400).json({error: 'blog not found'})
+  }
+  if (request.user.id !== blog.user.toString()) {
+    return response.status(401).json({ error: 'user can only delete their own blogs' })
+  }
+  await Blog.findByIdAndDelete(blog._id)
+  user.blogs = user.blogs.filter(blogID => !_.isEqual(blogID, blog._id))
+  user.save()
   response.status(204).end()
 })
 
