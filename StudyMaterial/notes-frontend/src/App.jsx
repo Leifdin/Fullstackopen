@@ -17,7 +17,7 @@ import InputGroup from 'react-bootstrap/InputGroup'
 
 const App = (props) => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('A new note')
+  const [newNote, setNewNote] = useState({ content: '', important: true })
   const [showAll, setShowAll] = useState(true)
   const [username, setUserName] = useState('')
   const [password, setPassword] = useState('')
@@ -26,13 +26,14 @@ const App = (props) => {
 
 
   useEffect(() => {
-    /*
-    console.log('effect')
-    */
     noteService
       .getAll()
       .then(initialNotes => {
         setNotes(initialNotes)
+      })
+      .catch((error) => {
+        console.log(error)
+        handleError('Error connecting to database')
       })
   }, [])
   /*
@@ -68,26 +69,17 @@ const App = (props) => {
 
   const addNote = (event) => {
     event.preventDefault()
-    /*
-    console.log('Button clicked', event.target)
-    */
-    const noteObject = {
-      content: newNote,
-      important: Math.random() < 0.5
-    }
-    /*
-    setNotes(notes.concat(noteObject))
-    setNewNote('')
-    */
     noteService
-      .create(noteObject)
+      .create(newNote)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
-        setNewNote('')
+        setNewNote({content: '', important: true})
       })
       .catch(error => {
         if (error.response.status === 401) {
-          alert('Log in to add notes')
+          handleError('Log in to add notes')
+        } else {
+          handleError(error.errorMessage)
         }
       })
   }
@@ -98,8 +90,11 @@ const App = (props) => {
    */
   const handleChange = (event, type) => {
     switch (type) {
-      case 'NOTE':
-        setNewNote(event.target.value)
+      case 'NOTE-CONTENT':
+        setNewNote({ content: event.target.value, important: newNote.important })
+        break
+      case 'NOTE-IMPORTANT':
+        setNewNote({ content: newNote.content, important: !newNote.important })
         break
       case 'PASS':
         setPassword(event.target.value)
@@ -109,12 +104,18 @@ const App = (props) => {
         break
     }
   }
-
+  const handleError = (error) => {
+    setErrorMessage(error)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
   const handleLogin = (event) => {
     event.preventDefault
     loginService.login({ username, password })
       .then(user => {
         setUser(user)
+        noteService.setToken(user.token)
         setUserName('')
         setPassword('')
       })
@@ -124,6 +125,67 @@ const App = (props) => {
           setErrorMessage(null)
         }, 5000)
       })
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+    noteService.setToken(null)
+  }
+
+  const renderUser = () => {
+    return (
+      <>
+        <InputGroup className='mb-3'>
+          <InputGroup.Text>Username:</InputGroup.Text>
+          <Form.Control
+            value={user.username}
+            disabled={true}
+          />
+          <Button variant="primary" type="submit" onClick={handleLogout}>Log out</Button>
+        </InputGroup>
+        <InputGroup className="mb-3">
+          <InputGroup.Text id="basic-addon1">New note:</InputGroup.Text>
+          <Form.Control
+            placeholder="Type new note here"
+            aria-describedby="basic-addon1"
+            onChange={(event) => handleChange(event, 'NOTE-CONTENT')}
+          />
+          <Form.Check 
+            label='Important'
+            style={{fontSize: 'large', margin: '0 10px'}}
+            checked={newNote.important}
+            onChange={(event) => handleChange(event, 'NOTE-IMPORTANT')}
+          />
+          <Button variant="primary" type="submit" onClick={addNote}>Submit</Button>
+        </InputGroup>
+      </>
+    )
+  }
+
+  const renderLogin = () => {
+    return (
+      <InputGroup>
+        <InputGroup.Text>Username:</InputGroup.Text>
+        <Form.Control
+          onChange={(event) => handleChange(event, 'USER')}
+          value={username}
+          placeholder='Log in to add notes'
+        />
+        <InputGroup.Text>Password:</InputGroup.Text>
+        <Form.Control
+          onChange={(event) => handleChange(event, 'PASS')}
+          value={password}
+          type='password'
+        />
+        <Button
+          variant="primary"
+          type="submit"
+          onClick={handleLogin}
+        >
+          Submit
+        </Button>
+      </InputGroup>
+    )
   }
 
   return (
@@ -136,7 +198,7 @@ const App = (props) => {
             <Col
               xs={12}
               style={{ background: '#FAA0A0', }}>
-              <b style={{ fontSize: '25px', padding: '5px 0',}}>{errorMessage}</b>
+              <b style={{ fontSize: '25px', padding: '5px 0', }}>{errorMessage}</b>
             </Col>
           </Row>}
         <CardGroup>
@@ -162,49 +224,7 @@ const App = (props) => {
         </Row>
 
       </Container>
-      {user &&
-        <>
-          <InputGroup className='mb-3'>
-            <InputGroup.Text>Username:</InputGroup.Text>
-            <Form.Control
-              value={user}
-              disabled={true}
-            />
-          </InputGroup>
-          <InputGroup className="mb-3">
-            <InputGroup.Text id="basic-addon1">New note:</InputGroup.Text>
-            <Form.Control
-              placeholder="Type new note here"
-              aria-describedby="basic-addon1"
-              onChange={(event) => handleChange(event, 'NOTE')}
-            />
-            <Button variant="primary" type="submit" onClick={addNote}>Submit</Button>
-          </InputGroup>
-        </>}
-      {!user &&
-        <InputGroup>
-          <InputGroup.Text>Username:</InputGroup.Text>
-          <Form.Control
-            onChange={(event) => handleChange(event, 'USER')}
-            value={username}
-            placeholder='Log in to add notes'
-          />
-          <InputGroup.Text>Password:</InputGroup.Text>
-          <Form.Control
-            onChange={(event) => handleChange(event, 'PASS')}
-            value={password}
-            type='password'
-          />
-          <Button
-            variant="primary"
-            type="submit"
-            onClick={handleLogin}
-          >
-            Submit
-          </Button>
-        </InputGroup>
-      }
-
+      {user ? renderUser() : renderLogin()}
       {/* <Form>
 
         <FormControl>

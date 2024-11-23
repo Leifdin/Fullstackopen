@@ -9,7 +9,7 @@ const Note = (props) => {
       <Card style={{ display: 'flex', height: '100%', textAlign: 'center'}}>
         <Card.Body>
           <Card.Title>{props.index + 1}</Card.Title>
-          <Card.Text>
+          <Card.Text style={{fontWeight: props.note.important ? 'bold' : 'normal'}}>
             {props.note.content}
           </Card.Text>
 
