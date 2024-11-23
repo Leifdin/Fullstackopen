@@ -68,12 +68,37 @@ notesRouter.post('/', async (request, response) => {
 notesRouter.put('/:id', async (request, response, next) => {
   const body = request.body
 
-  const note = {
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  if(!decodedToken.id){
+    return response.status(401).json({ error: 'invalid token' })
+  }
+
+  const user = await User.findById(decodedToken.id)
+
+  if (!body.content) {
+    return response.status(400).json({
+      error: 'Content missing'
+    })
+  }
+
+  const note = await Note.findById(request.params.id)
+
+  console.log(note)
+  console.log(user)
+
+  if (user.id !== note.user?.toString()) {
+    return response.status(401).json({ error: 'user can only update their own notes' })
+  }
+  console.log(note)
+  console.log(user)
+
+  submitNote = {
     content: body.content,
     important: body.important,
   }
+  
 
-  const updatedNote = await Note.findByIdAndUpdate(request.params.id, note, { new: true })
+  const updatedNote = await Note.findByIdAndUpdate(request.params.id, submitNote, { new: true })
   response.json(updatedNote)
 })
 

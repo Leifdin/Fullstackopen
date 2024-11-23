@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/notes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBvbG9uZWMiLCJpZCI6IjY3M2NiNzcwNGM4YmZjMjMyYTcxYTJmZSIsImlhdCI6MTczMjA0OTUxMywiZXhwIjoxNzMyMDQ5NTQzfQ.P7rFSbXH3MDIxSWC_1p33yYf5FJmU038Qg3qLWi2cvE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBvbG9uZWMiLCJpZCI6IjY3M2NiNzcwNGM4YmZjMjMyYTcxYTJmZSIsImlhdCI6MTczMjM1NTg2NSwiZXhwIjoxNzMyMzU1ODk1fQ.fIGkAqLReUbv6W9I9y89cJHqrwW1kWUM3D_s3KoxjQ4
 
 {
-    "content": "Poznamka prihlaseneho Paliho s tokenom exp",
+    "content": "Poznamka na zmenu",
     "important": true,
     "userId": "673cb7704c8bfc232a71a2fe"
     
