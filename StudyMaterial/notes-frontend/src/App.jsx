@@ -9,6 +9,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/esm/Col.js'
 import CardGroup from 'react-bootstrap/CardGroup'
+import InputGroup from 'react-bootstrap/InputGroup'
 
 
 
@@ -17,6 +18,9 @@ const App = (props) => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('A new note')
   const [showAll, setShowAll] = useState(true)
+  const [username, setUserName] = useState('')
+  const [password, setPassword] = useState('')
+
 
   useEffect(() => {
     /*
@@ -84,8 +88,27 @@ const App = (props) => {
         }
       })
   }
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value)
+  /**
+   * handles input field change
+   * @param {event} event 
+   * @param {String} type NOTE/PASS/USER 
+   */
+  const handleChange = (event, type) => {
+    switch (type){
+      case 'NOTE':
+        setNewNote(event.target.value)
+        break
+      case 'PASS':
+        setPassword(event.target.value)
+        break
+      case 'USER':
+        setUserName(event.target.value)
+        break
+    }
+  }
+
+  const handleLogin = (event) => {
+    event.preventDefault
   }
 
   return (
@@ -103,12 +126,54 @@ const App = (props) => {
               />)}
           </Row>
         </CardGroup>
+        <Row style={{padding: '0 15px'}}>
+          <Form.Check // prettier-ignore
+            type="switch"
+            id="custom-switch"
+            label="Show only important"
+            onChange={() => setShowAll(!showAll)}
+            value={showAll}
+          />
+        </Row>
 
       </Container>
-      <Form>
+      <InputGroup className="mb-3">
+        <InputGroup.Text id="basic-addon1">New note:</InputGroup.Text>
+        <Form.Control
+          placeholder="Type new note here"
+          aria-describedby="basic-addon1"
+          onChange={(event) => handleChange(event, 'NOTE')}
+        />
+        <Button variant="primary" type="submit" onClick={addNote}>Submit</Button>
+      </InputGroup>
+      <InputGroup>
+        <InputGroup.Text>Username:</InputGroup.Text>
+        <Form.Control
+          onChange={(event) => handleChange(event, 'USER')}
+          value={username}
+          placeholder='Log in to add notes'
+          />
+        <InputGroup.Text>Password:</InputGroup.Text>
+        <Form.Control
+          onChange={(event) => {handleChange(event, 'PASS')}}
+          value={password}
+          type='password'
+          />
+        <Button 
+          variant="primary" 
+          type="submit" 
+          onClick={handleLogin}
+        >
+          Submit
+        </Button>
+      </InputGroup>
 
-        <Form.Group className="mb-3" controlId="saveNote" >
-          <Row>
+      {/* <Form>
+
+        <FormControl>
+
+        </FormControl>
+          
             <Col md='auto'><
               Form.Control type="text" placeholder="A new note" onChange={handleNoteChange} />
             </Col>
@@ -122,34 +187,10 @@ const App = (props) => {
                 Show {showAll ? 'important' : 'all'}
               </Button>
             </Col>
-          </Row>
+          
         </Form.Group>
-      </Form>
+      </Form> */}
     </Container>
-    // <Container className='p-3'>
-    //   <Row className="justify-content-center"><h1>Notes</h1></Row>
-    //   <ul>
-    // {notesToShow.map(note =>
-    //   <Note
-    //     key={note.id}
-    //     note={note}
-    //     toggleImportance={() => toggleImportanceOf(note.id)}
-    //   />)}
-    //   </ul>
-    //   <div>
-    //     <button onClick={() => setShowAll(!showAll)}>
-    //       Show {showAll ? 'important' : 'all'}
-    //     </button>
-    //   </div>
-    //   <Form>
-
-    //   <Form.Group className="mb-3" controlId="saveNote" >
-    //     <Form.Control type="text" placeholder="A new note" onChange={handleNoteChange}/>
-    //     <Button variant="primary" type="submit" onClick={addNote}>Submit</Button>
-    //   </Form.Group>
-
-    //   </Form>
-    // </Container>
   )
 }
 export default App
