@@ -32,6 +32,13 @@ notesRouter.get('/:id', async (request, response, next) => {
 
 
 notesRouter.delete('/:id', async (request, response) => {
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  const user = await User.findById(decodedToken.id)
+  const note = await Note.findById(request.params.id)
+
+  if (user.id !== note.user?.toString()) {
+    return response.status(401).json({ error: 'user can only update their own notes' })
+  }
   await Note.findByIdAndDelete(request.params.id)
   response.status(204).end()
 })
@@ -82,9 +89,6 @@ notesRouter.put('/:id', async (request, response, next) => {
   }
 
   const note = await Note.findById(request.params.id)
-
-  console.log(note)
-  console.log(user)
 
   if (user.id !== note.user?.toString()) {
     return response.status(401).json({ error: 'user can only update their own notes' })
