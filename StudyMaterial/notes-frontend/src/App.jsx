@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import Note from './components/Note.jsx'
 import noteService from './services/notes'
+import loginService from './services/login.js'
 
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/esm/Col.js'
+import Col from 'react-bootstrap/Col'
 import CardGroup from 'react-bootstrap/CardGroup'
 import InputGroup from 'react-bootstrap/InputGroup'
 
@@ -20,6 +21,8 @@ const App = (props) => {
   const [showAll, setShowAll] = useState(true)
   const [username, setUserName] = useState('')
   const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
+  const [errorMessage, setErrorMessage] = useState('')
 
 
   useEffect(() => {
@@ -94,7 +97,7 @@ const App = (props) => {
    * @param {String} type NOTE/PASS/USER 
    */
   const handleChange = (event, type) => {
-    switch (type){
+    switch (type) {
       case 'NOTE':
         setNewNote(event.target.value)
         break
@@ -109,12 +112,33 @@ const App = (props) => {
 
   const handleLogin = (event) => {
     event.preventDefault
+    loginService.login({ username, password })
+      .then(user => {
+        setUser(user)
+        setUserName('')
+        setPassword('')
+      })
+      .catch(exception => {
+        setErrorMessage('Wrong username or password')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
   }
 
   return (
     <Container className="p-3">
       <Container className="p-5 mb-4 bg-light rounded-3">
         <h1 className="header">Notes</h1>
+        <br />
+        {errorMessage &&
+          <Row style={{ margin: "0 5px 10px 5px" }}>
+            <Col
+              xs={12}
+              style={{ background: '#FAA0A0', }}>
+              <b style={{ fontSize: '25px', padding: '5px 0',}}>{errorMessage}</b>
+            </Col>
+          </Row>}
         <CardGroup>
           <Row md={3} className="g-4">
             {notesToShow.map((note, index) =>
@@ -125,8 +149,9 @@ const App = (props) => {
                 index={index}
               />)}
           </Row>
+
         </CardGroup>
-        <Row style={{padding: '0 15px'}}>
+        <Row style={{ padding: '0 15px' }}>
           <Form.Check // prettier-ignore
             type="switch"
             id="custom-switch"
@@ -137,36 +162,48 @@ const App = (props) => {
         </Row>
 
       </Container>
-      <InputGroup className="mb-3">
-        <InputGroup.Text id="basic-addon1">New note:</InputGroup.Text>
-        <Form.Control
-          placeholder="Type new note here"
-          aria-describedby="basic-addon1"
-          onChange={(event) => handleChange(event, 'NOTE')}
-        />
-        <Button variant="primary" type="submit" onClick={addNote}>Submit</Button>
-      </InputGroup>
-      <InputGroup>
-        <InputGroup.Text>Username:</InputGroup.Text>
-        <Form.Control
-          onChange={(event) => handleChange(event, 'USER')}
-          value={username}
-          placeholder='Log in to add notes'
+      {user &&
+        <>
+          <InputGroup className='mb-3'>
+            <InputGroup.Text>Username:</InputGroup.Text>
+            <Form.Control
+              value={user}
+              disabled={true}
+            />
+          </InputGroup>
+          <InputGroup className="mb-3">
+            <InputGroup.Text id="basic-addon1">New note:</InputGroup.Text>
+            <Form.Control
+              placeholder="Type new note here"
+              aria-describedby="basic-addon1"
+              onChange={(event) => handleChange(event, 'NOTE')}
+            />
+            <Button variant="primary" type="submit" onClick={addNote}>Submit</Button>
+          </InputGroup>
+        </>}
+      {!user &&
+        <InputGroup>
+          <InputGroup.Text>Username:</InputGroup.Text>
+          <Form.Control
+            onChange={(event) => handleChange(event, 'USER')}
+            value={username}
+            placeholder='Log in to add notes'
           />
-        <InputGroup.Text>Password:</InputGroup.Text>
-        <Form.Control
-          onChange={(event) => {handleChange(event, 'PASS')}}
-          value={password}
-          type='password'
+          <InputGroup.Text>Password:</InputGroup.Text>
+          <Form.Control
+            onChange={(event) => handleChange(event, 'PASS')}
+            value={password}
+            type='password'
           />
-        <Button 
-          variant="primary" 
-          type="submit" 
-          onClick={handleLogin}
-        >
-          Submit
-        </Button>
-      </InputGroup>
+          <Button
+            variant="primary"
+            type="submit"
+            onClick={handleLogin}
+          >
+            Submit
+          </Button>
+        </InputGroup>
+      }
 
       {/* <Form>
 
