@@ -6,7 +6,7 @@
   "scripts": {
     "start": "NODE_ENV=production node index.js",
     "dev": "NODE_ENV=development nodemon index.js",
-    "build:ui": "rm -rf dist && cd /home/pp/react/Fullstackopen/playground/part2codealong && npm run build && rsync -avz dist /home/pp/react/Fullstackopen/part3/StudyMaterial/",
+    "build:ui": "rm -rf dist && cd ../notes-frontend && npm run build && rsync -avz dist ../notes-backend/",
     "deploy": "rsync -avz /home/pp/react/Fullstackopen/part3/StudyMaterial/ ppolonec@164.90.186.10:notes/",
     "test": "NODE_ENV=test node --test"
   },
