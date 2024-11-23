@@ -1,0 +1,10 @@
+PUT http://localhost:3001/api/notes/673adc22bf62e8ac00c99594
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBvbG9uZWMiLCJpZCI6IjY3M2NiNzcwNGM4YmZjMjMyYTcxYTJmZSIsImlhdCI6MTczMjM1NjAwNSwiZXhwIjoxNzMyMzU5NjA1fQ.x2ETUzmR5p3VHcFblRuw_oku-rsUE9gTRwnIhPiY0A4
+
+{
+    "content": "Poznamka by sa nemala aktualizovat",
+    "important": true,
+    "userId": "673cb7704c8bfc232a71a2fe"
+    
+}
