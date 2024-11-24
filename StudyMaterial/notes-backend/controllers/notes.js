@@ -21,7 +21,7 @@ notesRouter.get('/', async (request, response) => {
 })
 
 notesRouter.get('/:id', async (request, response, next) => {
-  const note = await Note.findById(request.params.id)
+  const note = await Note.findById(request.params.id).populate('user', { username: 1, name: 1 })
   if (note) {
     response.json(note)
   } else {
@@ -34,7 +34,7 @@ notesRouter.get('/:id', async (request, response, next) => {
 notesRouter.delete('/:id', async (request, response) => {
   const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
   const user = await User.findById(decodedToken.id)
-  const note = await Note.findById(request.params.id)
+  const note = await Note.findById(request.params.id).populate('user', { username: 1, name: 1 })
 
   if (user.id !== note.user?.toString()) {
     return response.status(401).json({ error: 'user can only update their own notes' })
@@ -93,16 +93,15 @@ notesRouter.put('/:id', async (request, response, next) => {
   if (user.id !== note.user?.toString()) {
     return response.status(401).json({ error: 'user can only update their own notes' })
   }
-  console.log(note)
-  console.log(user)
-
   submitNote = {
     content: body.content,
     important: body.important,
   }
   
 
-  const updatedNote = await Note.findByIdAndUpdate(request.params.id, submitNote, { new: true })
+  const updatedNote = await Note
+    .findByIdAndUpdate(request.params.id, submitNote, { new: true })
+    .populate('user', { username: 1, name: 1 })
   response.json(updatedNote)
 })
 

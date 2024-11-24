@@ -12,19 +12,24 @@ import Col from 'react-bootstrap/Col'
 import CardGroup from 'react-bootstrap/CardGroup'
 import InputGroup from 'react-bootstrap/InputGroup'
 
-
+const initNoteData = {
+  content: '',
+  important: true,
+}
 
 
 const App = (props) => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState({ content: '', important: true })
+  const [newNote, setNewNote] = useState(initNoteData)
   const [showAll, setShowAll] = useState(true)
   const [username, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState('')
 
-
+  /**
+   * Downloads notes from db
+   */
   useEffect(() => {
     noteService
       .getAll()
@@ -36,18 +41,25 @@ const App = (props) => {
         handleError('Error connecting to database')
       })
   }, [])
-  /*
-  console.log('render', notes.length, 'notes')
-  */
+
+  useEffect(() => {
+    const loggedUserJson = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJson) {
+      const user = JSON.parse(loggedUserJson)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  }, [])
+
 
   const toggleImportanceOf = (e, id) => {
     e.preventDefault()
     const note = notes.find(n => n.id === id)
     const updatedNote = { ...note, important: !note.important }
-
     noteService
       .update(id, updatedNote)
       .then(returnedNote => {
+        console.log(returnedNote)
         setNotes(notes.map(n => n.id != id ? n : returnedNote))
       })
       .catch(error => {
@@ -73,7 +85,7 @@ const App = (props) => {
       .create(newNote)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
-        setNewNote({content: '', important: true})
+        setNewNote(initNoteData)
       })
       .catch(error => {
         if (error.response.status === 401) {
@@ -115,6 +127,7 @@ const App = (props) => {
     loginService.login({ username, password })
       .then(user => {
         setUser(user)
+        window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
         noteService.setToken(user.token)
         setUserName('')
         setPassword('')
@@ -130,6 +143,7 @@ const App = (props) => {
   const handleLogout = () => {
     setUser(null)
     noteService.setToken(null)
+    window.localStorage.clear()
   }
 
   const renderUser = () => {
@@ -149,14 +163,16 @@ const App = (props) => {
             placeholder="Type new note here"
             aria-describedby="basic-addon1"
             onChange={(event) => handleChange(event, 'NOTE-CONTENT')}
+            value={newNote.content}
           />
-          <Form.Check 
+          <Form.Check
             label='Important'
-            style={{fontSize: 'large', margin: '0 10px'}}
+            style={{ fontSize: 'large', margin: '0 10px' }}
             checked={newNote.important}
             onChange={(event) => handleChange(event, 'NOTE-IMPORTANT')}
           />
           <Button variant="primary" type="submit" onClick={addNote}>Submit</Button>
+          {/* <Button variant="danger" onClick={() => console.log(newNote)}>Debug   </Button> */}
         </InputGroup>
       </>
     )
@@ -184,6 +200,7 @@ const App = (props) => {
         >
           Submit
         </Button>
+        
       </InputGroup>
     )
   }
@@ -203,13 +220,20 @@ const App = (props) => {
           </Row>}
         <CardGroup>
           <Row md={3} className="g-4">
-            {notesToShow.map((note, index) =>
-              <Note
+            {notesToShow.map((note, index) => {
+              const isDisabled = (!note.user || !user)
+                ? true
+                : note.user.username === user.username
+                  ? false
+                  : true
+              return (<Note
                 key={note.id}
                 note={note}
                 toggleImportance={(e) => toggleImportanceOf(e, note.id)}
                 index={index}
-              />)}
+                disabled={isDisabled}
+              />)
+            })}
           </Row>
 
         </CardGroup>
