@@ -18,6 +18,7 @@ blogsRouter.get('/:id', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
 
   const user = await User.findById(request.user.id)
+  console.log(user)
 
 
   const body = request.body
@@ -36,7 +37,7 @@ blogsRouter.post('/', async (request, response) => {
       error: 'URL missing'
     })
   }
-  const blog = new Blog({ ...defaultBlog, ...body })
+  const blog = new Blog({ ...defaultBlog, ...body, user: user._id })
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()

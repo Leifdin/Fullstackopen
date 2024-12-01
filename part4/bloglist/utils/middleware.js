@@ -24,6 +24,7 @@ const userExtractor = (request, response, next) => {
       return response.status(401).json({ error: 'invalid token' })
     }
     request.user = decodedToken
+    console.log(decodedToken)
   }
   
   next()
