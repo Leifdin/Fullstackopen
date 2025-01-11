@@ -134,6 +134,7 @@ const App = (props) => {
       })
       .catch(exception => {
         setErrorMessage('Wrong username or password')
+        console.log(exception)
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
