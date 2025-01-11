@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react"
-import Togglable from "./Togglable"
+import React, { useRef, useState } from 'react'
+import Togglable from './Togglable'
 
 const NewBlogForm = ({ returnToParent }) => {
 
