@@ -1,7 +1,7 @@
 import { useState } from "react"
-import Togglable from "./Togglable"
+import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleMessage, setReloadBlogs }) => {
 
   const [visible, setVisible] = useState(false)
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -17,17 +17,34 @@ const Blog = ({ blog }) => {
 
   const toggleVisibility = () => {
     setVisible(!visible)
+    console.log(blog)
   }
+
+  const addLike = () => {
+    const newBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+    }
+    blogService.update(newBlog)
+      .then(returnedBlog => {
+        setReloadBlogs(1)
+        // handleMessage({ type: 'success', text: `blog ${returnedBlog.title} by ${returnedBlog.author} was liked` })
+      })
+      .catch(e => {
+        handleMessage({ type: 'error', text: e.message })
+      })
+  }
+
   return (
     <div style={blogStyle}>
       <div style={hideWhenVisible}>
-        {blog.author} <button onClick={toggleVisibility}>Show</button><br/>
+        {blog.author} <button onClick={toggleVisibility}>Show</button><br />
       </div>
       <div style={showWhenVisible}>
-      {blog.author} <button onClick={toggleVisibility}>Hide</button><br/>
-        {blog.url}<br/>
-        {blog.likes} <button>Like</button><br/>
-        {blog.author}<br/>
+        {blog.author} <button onClick={toggleVisibility}>Hide</button><br />
+        {blog.url}<br />
+        {blog.likes} <button onClick={addLike}>Like</button><br />
+        {blog.user?.username}<br />
       </div>
     </div>
   )

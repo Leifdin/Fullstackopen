@@ -16,24 +16,19 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
-  const [showNewBlog, setShowNewBlog] = useState('')
+  const [reloadBlogs, setReloadBlogs] = useState(1)
 
   const [message, setMessage] = useState(initMessage)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }, [])
-
-  // useEffect(() => {
-  //   const loggedUserJson = window.localStorage.getItem('loggedBlogUser')
-  //   if (loggedUserJson !== null) {
-  //       const userData = JSON.parse(loggedUserJson)
-  //       setUser(userData)
-  //       blogService.setToken(userData.token)
-  // }
-  // }, [])
+    if(reloadBlogs){
+      blogService.getAll().then(blogs =>
+        setBlogs(_.orderBy(blogs, 'likes', 'desc'))
+      )
+      setReloadBlogs(0)
+    }
+    
+  }, [reloadBlogs])
   useEffect(() => {
     const loggedUserJson = window.localStorage.getItem('loggedBlogUser')
     if (loggedUserJson) {
@@ -58,15 +53,6 @@ const App = () => {
       case 'password':
         setPassword(val)
         break
-      // case 'title':
-      //   setTitle(val)
-      //   break
-      // case 'author':
-      //   setAuthor(val)
-      //   break
-      // case 'url':
-      //   setUrl(val)
-      //   break
     }
   }
   const handleAction = (event, action) => {
@@ -93,45 +79,12 @@ const App = () => {
         blogService.setToken(null)
         window.localStorage.clear()
         break
-      // case 'newBlog':
-      //   if (!author || !title || !url){
-      //     handleMessage({type: 'error', text: 'Required field(s) missing'})
-      //   }
-      //   const newBlog = {
-      //     author: author,
-      //     title: title,
-      //     url: url,
-      //   }
-      //   blogService.add(newBlog)
-      //     .then(returnedBlog => {
-      //       setBlogs(blogs.concat(returnedBlog))
-      //       setAuthor('')
-      //       setTitle('')
-      //       setUrl('')
-      //       handleMessage({type: 'success', text: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`})
-      //     })
-      //     .catch(e => {
-      //       handleMessage({type: 'error', text: e.message})
-      //     })
-
-
     }
   }
 
   const renderLogin = () => {
     if (!user) {
       return (
-        // <div>
-        //   <h2>login</h2>
-        //   <label>
-        //     Username: <input value={username} onChange={e => handleChange(e, 'username')} />
-        //   </label>
-        //   <label>
-        //     Password: <input value={password} onChange={e => handleChange(e, 'password')} type='password' />
-        //   </label>
-        //   <br />
-        //   <button onClick={e => handleAction(e, 'login')}>Submit</button>
-        // </div>
         <LoginForm handleChange={handleChange} handleAction={handleAction} username={username} password={password} />
 
       )
@@ -143,7 +96,7 @@ const App = () => {
       return (<div>
         <h2>blogs</h2>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} handleMessage={handleMessage} setReloadBlogs={setReloadBlogs}/>
         )}
         <button onClick={e => handleAction(e, 'logout')}>Logout</button>
       </div>)

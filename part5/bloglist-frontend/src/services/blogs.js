@@ -19,5 +19,9 @@ const add = (newBlog) => {
   return request.then(response => response.data)
   
 }
+const update = (updatedBlog) => {
+  return axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog, { headers: {Authorization: token }})
+    .then(response => response.data)
+}
 
-export default { getAll, setToken, add }
+export default { getAll, setToken, add, update }
