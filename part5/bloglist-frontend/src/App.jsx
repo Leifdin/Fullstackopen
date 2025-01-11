@@ -3,6 +3,8 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import _ from 'lodash'
+import LoginForm from './components/LoginForm'
+import NewBlogForm from './components/NewBlogForm'
 
 const initMessage = {
   text: '',
@@ -14,9 +16,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
-  const [author, setAuthor] = useState('')
-  const [title, setTitle] = useState('')
-  const [url, setUrl] = useState('')
+  const [showNewBlog, setShowNewBlog] = useState('')
 
   const [message, setMessage] = useState(initMessage)
 
@@ -58,15 +58,15 @@ const App = () => {
       case 'password':
         setPassword(val)
         break
-      case 'title':
-        setTitle(val)
-        break
-      case 'author':
-        setAuthor(val)
-        break
-      case 'url':
-        setUrl(val)
-        break
+      // case 'title':
+      //   setTitle(val)
+      //   break
+      // case 'author':
+      //   setAuthor(val)
+      //   break
+      // case 'url':
+      //   setUrl(val)
+      //   break
     }
   }
   const handleAction = (event, action) => {
@@ -93,26 +93,26 @@ const App = () => {
         blogService.setToken(null)
         window.localStorage.clear()
         break
-      case 'newBlog':
-        if (!author || !title || !url){
-          handleMessage({type: 'error', text: 'Required field(s) missing'})
-        }
-        const newBlog = {
-          author: author,
-          title: title,
-          url: url,
-        }
-        blogService.add(newBlog)
-          .then(returnedBlog => {
-            setBlogs(blogs.concat(returnedBlog))
-            setAuthor('')
-            setTitle('')
-            setUrl('')
-            handleMessage({type: 'success', text: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`})
-          })
-          .catch(e => {
-            handleMessage({type: 'error', text: e.message})
-          })
+      // case 'newBlog':
+      //   if (!author || !title || !url){
+      //     handleMessage({type: 'error', text: 'Required field(s) missing'})
+      //   }
+      //   const newBlog = {
+      //     author: author,
+      //     title: title,
+      //     url: url,
+      //   }
+      //   blogService.add(newBlog)
+      //     .then(returnedBlog => {
+      //       setBlogs(blogs.concat(returnedBlog))
+      //       setAuthor('')
+      //       setTitle('')
+      //       setUrl('')
+      //       handleMessage({type: 'success', text: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`})
+      //     })
+      //     .catch(e => {
+      //       handleMessage({type: 'error', text: e.message})
+      //     })
 
 
     }
@@ -121,17 +121,18 @@ const App = () => {
   const renderLogin = () => {
     if (!user) {
       return (
-        <div>
-          <h2>login</h2>
-          <label>
-            Username: <input value={username} onChange={e => handleChange(e, 'username')} />
-          </label>
-          <label>
-            Password: <input value={password} onChange={e => handleChange(e, 'password')} type='password' />
-          </label>
-          <br />
-          <button onClick={e => handleAction(e, 'login')}>Submit</button>
-        </div>
+        // <div>
+        //   <h2>login</h2>
+        //   <label>
+        //     Username: <input value={username} onChange={e => handleChange(e, 'username')} />
+        //   </label>
+        //   <label>
+        //     Password: <input value={password} onChange={e => handleChange(e, 'password')} type='password' />
+        //   </label>
+        //   <br />
+        //   <button onClick={e => handleAction(e, 'login')}>Submit</button>
+        // </div>
+        <LoginForm handleChange={handleChange} handleAction={handleAction} username={username} password={password} />
 
       )
     }
@@ -149,26 +150,29 @@ const App = () => {
     }
   }
 
+  const handleNewBlog = (title, author, url) => {
+    if (!author || !title || !url){
+      handleMessage({type: 'error', text: 'Required field(s) missing'})
+    }
+    const newBlog = {
+      author: author,
+      title: title,
+      url: url,
+    }
+    blogService.add(newBlog)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        handleMessage({type: 'success', text: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`})
+      })
+      .catch(e => {
+        handleMessage({type: 'error', text: e.message})
+      })
+  }
+
   const renderNewBlog = () => {
     if (user) {
       return (
-        <div>
-          <h2>new blog</h2>
-          <label>
-            title: <input value={title} onChange={e => handleChange(e, 'title')} />
-          </label>
-          <br />
-          <label>
-            author: <input value={author} onChange={e => handleChange(e, 'author')} />
-          </label>
-          <br />
-          <label>
-            url: <input value={url} onChange={e => handleChange(e, 'url')} />
-          </label>
-          <br />
-          <button onClick={e => handleAction(e, 'newBlog')}>Submit new blog</button>
-
-        </div>
+        <NewBlogForm returnToParent={handleNewBlog} />
       )
     }
   }
