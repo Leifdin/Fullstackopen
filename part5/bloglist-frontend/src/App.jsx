@@ -96,7 +96,7 @@ const App = () => {
       return (<div>
         <h2>blogs</h2>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} handleMessage={handleMessage} setReloadBlogs={setReloadBlogs}/>
+          <Blog key={blog.id} blog={blog} handleMessage={handleMessage} setReloadBlogs={setReloadBlogs} loggedUser={user}/>
         )}
         <button onClick={e => handleAction(e, 'logout')}>Logout</button>
       </div>)

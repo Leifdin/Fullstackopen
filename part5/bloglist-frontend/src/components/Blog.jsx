@@ -1,7 +1,7 @@
 import { useState } from "react"
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, handleMessage, setReloadBlogs }) => {
+const Blog = ({ blog, handleMessage, setReloadBlogs, loggedUser }) => {
 
   const [visible, setVisible] = useState(false)
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -34,7 +34,6 @@ const Blog = ({ blog, handleMessage, setReloadBlogs }) => {
         handleMessage({ type: 'error', text: e.message })
       })
   }
-
   return (
     <div style={blogStyle}>
       <div style={hideWhenVisible}>
@@ -45,6 +44,7 @@ const Blog = ({ blog, handleMessage, setReloadBlogs }) => {
         {blog.url}<br />
         {blog.likes} <button onClick={addLike}>Like</button><br />
         {blog.user?.username}<br />
+        {blog.user?.username === loggedUser.username && <button>Delete</button>}
       </div>
     </div>
   )
