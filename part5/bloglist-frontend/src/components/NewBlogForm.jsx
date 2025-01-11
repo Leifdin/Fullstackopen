@@ -33,7 +33,7 @@ const NewBlogForm = ({ returnToParent }) => {
 
 
   return (
-    <Togglable buttonLabel='New blog' ref={newBlogFormRef}>
+    <Togglable buttonShow='New blog' buttonHide='Cancel' ref={newBlogFormRef}>
       <h2>new blog</h2>
       <label>
         title: <input value={title} onChange={e => handleChange(e, 'title')} />
