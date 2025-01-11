@@ -1,7 +1,7 @@
 import { useState } from "react"
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, handleMessage, setReloadBlogs, loggedUser }) => {
+const Blog = ({ blog, handleMessage, handleUpdate, loggedUser, handleDelete }) => {
 
   const [visible, setVisible] = useState(false)
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -17,7 +17,6 @@ const Blog = ({ blog, handleMessage, setReloadBlogs, loggedUser }) => {
 
   const toggleVisibility = () => {
     setVisible(!visible)
-    console.log(blog)
   }
 
   const addLike = () => {
@@ -27,12 +26,26 @@ const Blog = ({ blog, handleMessage, setReloadBlogs, loggedUser }) => {
     }
     blogService.update(newBlog)
       .then(returnedBlog => {
-        setReloadBlogs(1)
-        // handleMessage({ type: 'success', text: `blog ${returnedBlog.title} by ${returnedBlog.author} was liked` })
+        handleMessage({ type: 'success', text: `blog ${returnedBlog.title} by ${returnedBlog.author} was liked` })
+        handleUpdate(returnedBlog)
       })
       .catch(e => {
         handleMessage({ type: 'error', text: e.message })
       })
+  }
+  const removeBlog = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      blogService.remove(blog.id)
+        .then(() => {
+          handleMessage({ type: 'delete', text: `blog ${blog.title} by ${blog.author} was deleted` })
+          handleDelete(blog)
+        })
+        .catch(error => {
+          console.log(error)
+          handleMessage({type: 'error', text: `error deleting note`})
+        })
+
+    }
   }
   return (
     <div style={blogStyle}>
@@ -44,7 +57,7 @@ const Blog = ({ blog, handleMessage, setReloadBlogs, loggedUser }) => {
         {blog.url}<br />
         {blog.likes} <button onClick={addLike}>Like</button><br />
         {blog.user?.username}<br />
-        {blog.user?.username === loggedUser.username && <button>Delete</button>}
+        {blog.user?.username === loggedUser.username && <button onClick={removeBlog}>Delete</button>}
       </div>
     </div>
   )
