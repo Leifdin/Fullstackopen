@@ -36,18 +36,18 @@ const NewBlogForm = ({ returnToParent }) => {
     <Togglable buttonLabel='New blog' ref={newBlogFormRef}>
       <h2>new blog</h2>
       <label>
-        title: <input value={title} onChange={e => handleChange(e, 'title')} />
+        title: <input value={title} onChange={e => handleChange(e, 'title')} data-testid='input-title' />
       </label>
       <br />
       <label>
-        author: <input value={author} onChange={e => handleChange(e, 'author')} />
+        author: <input value={author} onChange={e => handleChange(e, 'author')} data-testid='input-author' />
       </label>
       <br />
       <label>
-        url: <input value={url} onChange={e => handleChange(e, 'url')} />
+        url: <input value={url} onChange={e => handleChange(e, 'url')} data-testid='input-url' />
       </label>
       <br />
-      <button onClick={formSubmit}>Submit new blog</button>
+      <button onClick={formSubmit} data-testid='button-submit'>Submit new blog</button>
     </Togglable>
   )
 }
