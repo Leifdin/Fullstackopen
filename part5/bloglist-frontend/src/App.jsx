@@ -157,9 +157,9 @@ const App = () => {
       ? { backgroundColor: ' #e6ffe6', color: '#003300', borderColor: '#003300' }
       : message.type === 'error'
         ? { backgroundColor: ' #ffe6e6', color: '#660000', borderColor: '#660000' }
-      : message.type === 'delete'
-      ? { backgroundColor: 'rgb(255, 255, 230)', color: 'rgb(131, 131, 0)', borderColor: 'rgb(131, 131, 0)', }
-        : { display: 'none' }
+        : message.type === 'delete'
+          ? { backgroundColor: 'rgb(255, 255, 230)', color: 'rgb(131, 131, 0)', borderColor: 'rgb(131, 131, 0)', }
+          : { display: 'none' }
     return (
       <div style={{ ...style, borderStyle: 'solid', borderRadius: '5px', padding: '5px' }}>
         <p>{message.text}</p>

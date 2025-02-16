@@ -59,7 +59,6 @@ const App = (props) => {
     noteService
       .update(id, updatedNote)
       .then(returnedNote => {
-        console.log(returnedNote)
         setNotes(notes.map(n => n.id != id ? n : returnedNote))
       })
       .catch(error => {
@@ -132,9 +131,8 @@ const App = (props) => {
         setUserName('')
         setPassword('')
       })
-      .catch(exception => {
+      .catch(() => {
         setErrorMessage('Wrong username or password')
-        console.log(exception)
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
@@ -212,7 +210,7 @@ const App = (props) => {
         <h1 className="header">Notes</h1>
         <br />
         {errorMessage &&
-          <Row style={{ margin: "0 5px 10px 5px" }}>
+          <Row style={{ margin: "0 5px 10px 5px", position: 'fixed', top: '15px', zIndex: '2' }}>
             <Col
               xs={12}
               style={{ background: '#FAA0A0', }}>
