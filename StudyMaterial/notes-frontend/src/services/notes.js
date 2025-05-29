@@ -6,7 +6,7 @@ const setToken = (newToken) => {
   token = `Bearer ${newToken}`
 }
 
-const baseUrl = 'http://localhost:3000/api/notes'
+const baseUrl = process.env.NODE_ENV === 'dev' ? 'http://localhost:3000/api/notes' : '/api/notes'
 
 const getAll = () => axios.get(baseUrl).then(response => response.data)
 
