@@ -8,7 +8,7 @@
     "dev": "NODE_ENV=development nodemon index.js",
     "build:ui": "rm -rf dist && cd ../notes-frontend && npm run build && rsync -avz dist ../notes-backend/",
     "deploy": "rsync -avz /home/pp/react/Fullstackopen/part3/StudyMaterial/ ppolonec@164.90.186.10:notes/",
-    "test": "NODE_ENV=test node --test"
+    "test": "NODE_ENV=test nodemon index.js"
   },
   "author": "Pavol Polonec",
   "license": "ISC",

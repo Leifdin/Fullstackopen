@@ -208,6 +208,7 @@ const App = (props) => {
     <Container className="p-3">
       <Container className="p-5 mb-4 bg-light rounded-3">
         <h1 className="header">Notes</h1>
+        <h6 className='header'>Pavol Polonec</h6>
         <br />
         {errorMessage &&
           <Row style={{ margin: "0 5px 10px 5px", position: 'fixed', top: '15px', zIndex: '2' }}>
