@@ -122,7 +122,7 @@ const App = (props) => {
     }, 5000)
   }
   const handleLogin = (event) => {
-    event.preventDefault
+    event.preventDefault()
     loginService.login({ username, password })
       .then(user => {
         setUser(user)
@@ -131,7 +131,7 @@ const App = (props) => {
         setUserName('')
         setPassword('')
       })
-      .catch(() => {
+      .catch((error) => {
         setErrorMessage('Wrong username or password')
         setTimeout(() => {
           setErrorMessage(null)
@@ -179,28 +179,30 @@ const App = (props) => {
 
   const renderLogin = () => {
     return (
-      <InputGroup>
-        <InputGroup.Text>Username:</InputGroup.Text>
-        <Form.Control
-          onChange={(event) => handleChange(event, 'USER')}
-          value={username}
-          placeholder='Log in to add notes'
-        />
-        <InputGroup.Text>Password:</InputGroup.Text>
-        <Form.Control
-          onChange={(event) => handleChange(event, 'PASS')}
-          value={password}
-          type='password'
-        />
-        <Button
-          variant="primary"
-          type="submit"
-          onClick={handleLogin}
-        >
-          Submit
-        </Button>
-        
-      </InputGroup>
+      <Form onSubmit={handleLogin}>
+        <InputGroup>
+          <InputGroup.Text>Username:</InputGroup.Text>
+          <Form.Control
+            onChange={(event) => handleChange(event, 'USER')}
+            value={username}
+            placeholder='Log in to add notes'
+          />
+          <InputGroup.Text>Password:</InputGroup.Text>
+          <Form.Control
+            onChange={(event) => handleChange(event, 'PASS')}
+            value={password}
+            type='password'
+          />
+          <Button
+            variant="primary"
+            type="submit"
+            onClick={handleLogin}
+          >
+            Submit
+          </Button>
+
+        </InputGroup>
+      </Form>
     )
   }
 
