@@ -12,7 +12,7 @@ describe('Note app', () => {
   })
   test('login form can be opened', async ({ page }) => {
     await page.getByRole('button', { name: 'Submit' }).click()
-    await page.getByTestId('username').fill('mluukkai')
+    await page.getByTestId('username').fill('mlukkai')
     await page.getByTestId('password').fill('salainen')
     await page.getByRole('button', { name: 'Submit' }).click()
     await expect(page.getByText('Matti Luukkainen logged in')).toBeVisible()

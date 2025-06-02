@@ -159,6 +159,7 @@ const App = (props) => {
         if (error.response?.status === 401) {
           handleError('Wrong username or password')
         } else {
+          console.log(error.message)
           handleError(error.message)
           console.log(error)
         }
