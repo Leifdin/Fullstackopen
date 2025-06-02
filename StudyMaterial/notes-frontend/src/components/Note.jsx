@@ -1,5 +1,6 @@
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
+import Col from 'react-bootstrap/esm/Col'
 
 
 const Note = (props) => {
@@ -13,6 +14,7 @@ const Note = (props) => {
     textAlign: 'center',
     background: props.disabled ? '#FAFAFA' : '#FAFBFF',
     borderWidth: props.note.important ? '3px' : '1px',
+    boxSizing: 'border-box'
   }
 
   const textStyle = {
@@ -31,8 +33,8 @@ const Note = (props) => {
 
 
   return (
-    <div style={{ padding: '0 15px', flex: '1 0 auto' }} className='note'>
-      <Card style={cardStyle}>
+    <Col md='4' sm='12' style={{ padding: '0 15px', flex: '0 0 auto'}} className='note'>
+      <Card style={cardStyle} >
         <Card.Body>
           <Card.Title>{props.index + 1}</Card.Title>
           <Card.Text style={textStyle}>
@@ -51,7 +53,7 @@ const Note = (props) => {
           </Button>
         </Card.Footer>
       </Card>
-    </div>
+    </Col>
   )
 
 }

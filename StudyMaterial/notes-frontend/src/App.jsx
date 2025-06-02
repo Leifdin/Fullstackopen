@@ -106,12 +106,13 @@ const App = (props) => {
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
         setNewNote(initNoteData)
+        handleInfo(`${returnedNote.content} added`)
       })
       .catch(error => {
         if (error.response.status === 401) {
           handleError('Log in to add notes')
         } else {
-          handleError(error.errorMessage)
+          handleError(error.message)
         }
       })
   }
@@ -175,7 +176,7 @@ const App = (props) => {
 
   const renderUser = () => {
     return (
-      <>
+      <Form onSubmit={addNote}>
         <InputGroup className='mb-3'>
           <InputGroup.Text>Username:</InputGroup.Text>
           <Form.Control
@@ -188,8 +189,8 @@ const App = (props) => {
           <InputGroup.Text id="basic-addon1">New note:</InputGroup.Text>
           <Form.Control
             placeholder="Type new note here"
-            aria-describedby="basic-addon1"
             onChange={(event) => handleChange(event, 'NOTE-CONTENT')}
+            data-testid='new-note'
             value={newNote.content}
           />
           <Form.Check
@@ -201,7 +202,7 @@ const App = (props) => {
           <Button variant="primary" type="submit" onClick={addNote}>Submit</Button>
           {/* <Button variant="danger" onClick={() => console.log(newNote)}>Debug   </Button> */}
         </InputGroup>
-      </>
+      </Form>
     )
   }
 
@@ -245,7 +246,7 @@ const App = (props) => {
         <Message message={message} setMessage={setMessage} />
 
         <CardGroup>
-          <Row md={3} className="g-4">
+          <Row className="g-4">
             {notesToShow.map((note, index) => {
               const isDisabled = (!note.user || !user)
                 ? true
