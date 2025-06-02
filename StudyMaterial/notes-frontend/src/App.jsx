@@ -8,14 +8,15 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import CardGroup from 'react-bootstrap/CardGroup'
 import InputGroup from 'react-bootstrap/InputGroup'
+import Message from './components/Message.jsx'
 
 const initNoteData = {
   content: '',
   important: true,
 }
+export const initMessage = { isShown: false, msg: '', type: '', timeout: 0 }
 
 
 const App = (props) => {
@@ -25,7 +26,8 @@ const App = (props) => {
   const [username, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [message, setMessage] = useState(initMessage)
+  const [messageTimer, setMessageTimer] = useState()
 
   /**
    * Downloads notes from db
@@ -42,6 +44,9 @@ const App = (props) => {
       })
   }, [])
 
+  /**
+   * Gets user info from storage
+   */
   useEffect(() => {
     const loggedUserJson = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJson) {
@@ -50,6 +55,22 @@ const App = (props) => {
       noteService.setToken(user.token)
     }
   }, [])
+
+  /**
+   * Handles message interval
+   */
+  // useEffect(() => {
+  //   console.log(messageTimer)
+  //   const t = new Date()
+  //   if (t < messageTimer) {
+  //     setTimeout(() => {
+  //       setMessageTimer(messageTimer + 100)
+  //     }, 100)
+  //   } else {
+  //     setMessage(initMessage)
+  //     setMessageTimer(0)
+  //   }
+  // }, [message])
 
 
   const toggleImportanceOf = (e, id) => {
@@ -115,11 +136,13 @@ const App = (props) => {
         break
     }
   }
-  const handleError = (error) => {
-    setErrorMessage(error)
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 5000)
+  const handleError = (message, timeout = 5000) => {
+    // setMessageTimer(0)
+    setMessage({ type: 'error', msg: message, isShown: true, timeout })
+  }
+  const handleInfo = (message, timeout = 5000) => {
+    // setMessageTimer(0)
+    setMessage({ type: 'info', msg: message, isShown: true, timeout })
   }
   const handleLogin = (event) => {
     event.preventDefault()
@@ -130,12 +153,15 @@ const App = (props) => {
         noteService.setToken(user.token)
         setUserName('')
         setPassword('')
+        handleInfo(`${user.name} logged in`)
       })
       .catch((error) => {
-        setErrorMessage('Wrong username or password')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        if (error.response?.status === 401) {
+          handleError('Wrong username or password')
+        } else {
+          handleError(error.message)
+          console.log(error)
+        }
       })
   }
 
@@ -143,6 +169,7 @@ const App = (props) => {
     setUser(null)
     noteService.setToken(null)
     window.localStorage.clear()
+    handleInfo(`${user.name} logged out successfully`)
   }
 
   const renderUser = () => {
@@ -186,12 +213,14 @@ const App = (props) => {
             onChange={(event) => handleChange(event, 'USER')}
             value={username}
             placeholder='Log in to add notes'
+            data-testid='username'
           />
           <InputGroup.Text>Password:</InputGroup.Text>
           <Form.Control
             onChange={(event) => handleChange(event, 'PASS')}
             value={password}
             type='password'
+            data-testid='password'
           />
           <Button
             variant="primary"
@@ -212,14 +241,8 @@ const App = (props) => {
         <h1 className="header">Notes</h1>
         <h6 className='header'>Pavol Polonec</h6>
         <br />
-        {errorMessage &&
-          <Row style={{ margin: "0 5px 10px 5px", position: 'fixed', top: '15px', zIndex: '2' }}>
-            <Col
-              xs={12}
-              style={{ background: '#FAA0A0', }}>
-              <b style={{ fontSize: '25px', padding: '5px 0', }}>{errorMessage}</b>
-            </Col>
-          </Row>}
+        <Message message={message} setMessage={setMessage} />
+
         <CardGroup>
           <Row md={3} className="g-4">
             {notesToShow.map((note, index) => {
