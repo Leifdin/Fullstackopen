@@ -33,7 +33,7 @@ const Note = (props) => {
 
 
   return (
-    <Col md='4' sm='12' style={{ padding: '0 15px', flex: '0 0 auto'}} className='note'>
+    <Col md='4' sm='12' style={{ padding: '15px', flex: '0 0 auto'}} className='note'>
       <Card style={cardStyle} >
         <Card.Body>
           <Card.Title>{props.index + 1}</Card.Title>

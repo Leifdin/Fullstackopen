@@ -27,7 +27,6 @@ const App = (props) => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(initMessage)
-  const [messageTimer, setMessageTimer] = useState()
 
   /**
    * Downloads notes from db
@@ -246,7 +245,6 @@ const App = (props) => {
         <Message message={message} setMessage={setMessage} />
 
         <CardGroup>
-          <Row className="g-4">
             {notesToShow.map((note, index) => {
               const isDisabled = (!note.user || !user)
                 ? true
@@ -261,8 +259,6 @@ const App = (props) => {
                 disabled={isDisabled}
               />)
             })}
-          </Row>
-
         </CardGroup>
         <Row style={{ padding: '0 15px' }}>
           <Form.Check // prettier-ignore
