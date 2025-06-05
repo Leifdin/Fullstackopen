@@ -146,7 +146,7 @@ const App = () => {
     setMessage(message)
     setTimeout(() => {
       setMessage(initMessage)
-    }, 3500)
+    }, 10000)
   }
   const handleDelete = (deletedBlog) => {
     const newBlogArray = blogs.filter(blog => blog.id !== deletedBlog.id)

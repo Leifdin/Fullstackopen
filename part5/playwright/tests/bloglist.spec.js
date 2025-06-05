@@ -10,6 +10,13 @@ describe('Blog app', () => {
         password: 'owski'
       }
     })
+    await request.post('http://localhost:3000/api/users', {
+      data: {
+        name: 'Tester Testerowski',
+        username: 'owski',
+        password: 'tester'
+      }
+    })
     await page.goto('http://localhost:5173')
   })
 
@@ -47,6 +54,43 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'Submit' }).click()
       await expect(page.getByText('testing blog tester')).toBeVisible()
     })
+    describe('User can', () => {
+      beforeEach(async ({ page }) => {
+        await page.getByRole('button', { name: 'New blog' }).click()
+        await page.getByTestId('input-title').fill('testing blog')
+        await page.getByTestId('input-author').fill('tester')
+        await page.getByTestId('input-url').fill('tester.eu')
+        await page.getByRole('button', { name: 'Submit' }).click()
+        await expect(page.getByText('testing blog tester')).toBeVisible()
+      })
+      test('like blog', async ({ page }) => {
+        await page.getByRole('button', { name: 'Show' }).click()
+        await page.getByRole('button', { name: 'Like' }).click()
+        await expect(page.getByText('blog tester by testing blog was liked')).toBeVisible()
+      })
+      test('delete blog', async ({ page }) => {
+        await page.getByRole('button', { name: 'Show' }).click()
+        page.on('dialog', dialog => dialog.accept());
+        await page.getByRole('button', { name: 'Delete' }).click()
+        await expect(page.getByText('blog tester by testing blog was deleted')).toBeVisible()
+      })
+      describe('not', () => {
+        beforeEach(async ({ page }) => {
+          await page.getByRole('button', { name: 'Logout' }).click()
+          await page.getByTestId('username').fill('owski')
+          await page.getByTestId('password').fill('tester')
+          await page.getByRole('button', { name: 'Submit' }).click()
+          await expect(page.getByText('blogs')).toBeVisible()
+        })
+        test('delete blog of other user', async ({ page }) => {
+          await page.getByRole('button', { name: 'Show' }).click()
+          page.on('dialog', dialog => dialog.accept());
+          await expect(page.getByRole('button', { name: 'Like' })).toBeVisible()
+          await expect(page.getByRole('button', { name: 'Delete' })).toBeHidden()
+        })
+      })
+    })
+
   })
 
 })
