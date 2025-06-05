@@ -92,5 +92,38 @@ describe('Blog app', () => {
     })
 
   })
+  describe('Blogs are ordered correctly', () => {
+    beforeEach(async ({ page }) => {
+      await page.getByTestId('username').fill('tester')
+      await page.getByTestId('password').fill('owski')
+      await page.getByRole('button', { name: 'Submit' }).click()
+      await expect(page.getByText('blogs')).toBeVisible()
+
+      await page.getByRole('button', { name: 'New blog' }).click()
+      await page.getByTestId('input-title').fill('Blog1')
+      await page.getByTestId('input-author').fill('tester')
+      await page.getByTestId('input-url').fill('tester.eu')
+      await page.getByRole('button', { name: 'Submit' }).click()
+      await page.getByRole('button', { name: 'Show' }).click()
+      await page.getByRole('button', { name: 'Like' }).click()
+
+      await page.getByTestId('input-title').fill('Blog2')
+      await page.getByTestId('input-author').fill('tester')
+      await page.getByTestId('input-url').fill('tester.eu')
+      await page.getByRole('button', { name: 'Submit' }).click()
+      await page.getByRole('button', { name: 'Show' }).last().click()
+      await page.getByRole('button', { name: 'Like' }).last().click()
+      await page.getByRole('button', { name: 'Like' }).last().click()
+      await page.getByRole('button', { name: 'Like' }).last().click()
+      
+    })
+    test('likes', async ({ page }) => {
+      const divs = await page.getByTestId('hidden').all()
+      console.log(divs)
+      await expect(page.getByTestId('hidden').first()).toContainText('Blog2')
+    })
+  })
+
+
 
 })
