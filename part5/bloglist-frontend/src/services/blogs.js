@@ -1,5 +1,6 @@
 import axios from 'axios'
-const baseUrl = '/api/blogs'
+const env = process.env.NODE_ENV
+const baseUrl = env === 'dev' ? 'http://localhost:3000/api/blogs' : '/api/blogs'
 
 let token = null
 

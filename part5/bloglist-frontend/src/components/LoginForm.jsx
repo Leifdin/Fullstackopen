@@ -12,13 +12,13 @@ const LoginForm = ({
     <div>
       <h2>login</h2>
       <label>
-        Username: <input value={username} onChange={e => handleChange(e, 'username')} />
+        Username: <input data-testid='username' value={username} onChange={e => handleChange(e, 'username')} />
       </label>
       <label>
-        Password: <input value={password} onChange={e => handleChange(e, 'password')} type='password' />
+        Password: <input data-testid='password' value={password} onChange={e => handleChange(e, 'password')} type='password' />
       </label>
       <br />
-      <button onClick={e => handleAction(e, 'login')}>Submit</button>
+      <button data-testid='login-confirm' onClick={e => handleAction(e, 'login')}>Submit</button>
     </div>
   )
 }
