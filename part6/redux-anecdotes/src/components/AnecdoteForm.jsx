@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux"
 import { useState } from "react"
+import { addAnecdote } from "../reducers/anecdoteReducer"
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
@@ -16,7 +17,7 @@ const AnecdoteForm = () => {
         <button onClick={e => {
           e.preventDefault()
           if (newNoteContent) {
-            dispatch(newNote(newNoteContent))
+            dispatch(addAnecdote(newNoteContent))
             setNewNoteContent('')
           }
         }}>
