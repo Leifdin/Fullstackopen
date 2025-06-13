@@ -1,11 +1,25 @@
 import { useDispatch } from "react-redux"
 import { useState } from "react"
-import { addAnecdote } from "../reducers/anecdoteReducer"
+import { appendAnecdote } from "../reducers/anecdoteReducer"
 import { clearNotification, setNotification } from "../reducers/notificationReducer"
+import noteService from '../services/anecdotes'
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
   const [newAnecdoteContent, setNewNoteContent] = useState('')
+  const handleClick = async (e) => {
+    e.preventDefault()
+    if (newAnecdoteContent) {
+      const newAnecdote = await noteService.createNew(newAnecdoteContent)
+      console.log(newAnecdote)
+      dispatch(appendAnecdote(newAnecdote))
+      setNewNoteContent('')
+      dispatch(setNotification(`anecdote ${newAnecdote?.content} added`))
+      setTimeout(() => {
+        dispatch(clearNotification())
+      }, 5000)
+    }
+  }
   return (
     <>
       <h2>create new</h2>
@@ -15,17 +29,7 @@ const AnecdoteForm = () => {
             value={newAnecdoteContent}
             onChange={e => setNewNoteContent(e.target.value)} />
         </div>
-        <button onClick={e => {
-          e.preventDefault()
-          if (newAnecdoteContent) {
-            dispatch(addAnecdote(newAnecdoteContent))
-            setNewNoteContent('')
-            dispatch(setNotification(`anecdote ${newAnecdoteContent} added`))
-            setTimeout(() => {
-              dispatch(clearNotification())
-            }, 5000)
-          }
-        }}>
+        <button onClick={handleClick}>
           create
         </button>
       </form>
