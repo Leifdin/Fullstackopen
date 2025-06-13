@@ -1,7 +1,6 @@
 import _ from "lodash"
 import { useDispatch, useSelector } from "react-redux"
-import { voteFor } from "../reducers/anecdoteReducer"
-import { clearNotification, setNotification } from "../reducers/notificationReducer"
+import { voteForAnecdote } from "../reducers/anecdoteReducer"
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => state.anecdotes)
@@ -9,12 +8,8 @@ const AnecdoteList = () => {
   const anecdotesToShow = prepAnecdotes(anecdotes, filter)
   const dispatch = useDispatch()
 
-  const handleButton = (id, content) => {
-    dispatch(voteFor(id))
-    dispatch(setNotification(`you voted '${content}'`))
-    setTimeout(() => {
-      dispatch(clearNotification())
-    }, 5000)
+  const handleButton = (anecdote) => {
+    dispatch(voteForAnecdote(anecdote))
   }
   return (
     <>{
@@ -25,7 +20,7 @@ const AnecdoteList = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => handleButton(anecdote.id, anecdote.content)}>vote</button>
+            <button onClick={() => handleButton(anecdote)}>vote</button>
           </div>
         </div>
       )}</>
