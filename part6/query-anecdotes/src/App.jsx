@@ -1,26 +1,22 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
-import axios from 'axios'
+import { getAnecdotes, updateAnecdote } from './requests'
 
 const App = () => {
+  const queryClient = useQueryClient()
+  const updateAnecdoteMutation = useMutation({
+    mutationFn: updateAnecdote,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+  })
 
   const handleVote = (anecdote) => {
-    console.log('vote')
+    updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
   }
-
-  // const anecdotes = [
-  //   {
-  //     "content": "If it hurts, do it more often",
-  //     "id": "47145",
-  //     "votes": 0
-  //   },
-  // ]
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['anecdotes'],
-    queryFn: () => axios.get('http://localhost:3001/anecdotes')
+    queryFn: getAnecdotes,
   })
-  const anecdotes = data?.data
   if (isPending) {
     return (<div>loading...</div>)
   }
@@ -34,7 +30,7 @@ const App = () => {
       <Notification />
       <AnecdoteForm />
 
-      {anecdotes.map(anecdote =>
+      {data.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
