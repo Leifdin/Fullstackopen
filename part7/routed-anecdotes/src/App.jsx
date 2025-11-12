@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom'
-import Anecdote from './Anecdote'
-import Notification from './Notification'
+import Anecdote from './components/Anecdote'
+import Notification from './components/Notification'
 
 const Menu = () => {
   const padding = {
