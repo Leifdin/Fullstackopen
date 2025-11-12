@@ -1,12 +1,14 @@
 import { useState } from 'react'
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom'
+import Anecdote from './Anecdote'
+import Notification from './Notification'
 
 const Menu = () => {
   const padding = {
     paddingRight: 5
   }
   return (
-    <div style={{ display: 'flex', gap: '5px' }}>
+    <div style={{ display: 'flex', gap: '25px' }}>
       <Link to='/anecdotes'>anecdotes</Link>
       <Link to='/create'>create new</Link>
       <Link to='/about'>about</Link>
@@ -18,7 +20,7 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote => <li key={anecdote.id}><Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link> </li>)}
     </ul>
   </div>
 )
@@ -49,6 +51,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
+  const navigate = useNavigate()
 
 
   const handleSubmit = (e) => {
@@ -59,6 +62,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/anecdotes')
   }
 
   return (
@@ -85,6 +89,7 @@ const CreateNew = (props) => {
 }
 
 const App = () => {
+
   const [anecdotes, setAnecdotes] = useState([
     {
       content: 'If it hurts, do it more often',
@@ -101,12 +106,17 @@ const App = () => {
       id: 2
     }
   ])
-
+  const match = useMatch('/anecdotes/:id')
+  const anecdote = match
+    ? anecdotes.find(ane => ane.id === Number(match.params.id))
+    : null
   const [notification, setNotification] = useState('')
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new anecdote ${anecdote.content} created!`)
+    setTimeout(() => setNotification(''), 5000)
   }
 
   const anecdoteById = (id) =>
@@ -125,12 +135,14 @@ const App = () => {
 
   return (
     <div>
+      <Notification notification={notification} />
       <h1>Software anecdotes</h1>
       <Menu />
       <Routes>
         <Route path='/create' element={<CreateNew addNew={addNew} />} />
         <Route path='/about' element={<About />} />
         <Route path='/anecdotes' element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path='/anecdotes/:id' element={<Anecdote anecdote={anecdote} />} />
       </Routes>
       <Footer />
     </div>
