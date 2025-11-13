@@ -1,7 +1,16 @@
-export const useField = ({ type }) => {
-  const [val, setVal] = useState('')
+import React, { useState } from "react"
+
+/**
+ * Hook for input field control
+ * @param {object} props
+ * @param {string} [props.type]
+ * @returns 
+ */
+export const useField = ({ type = 'text' } = {}) => {
+  const [value, setValue] = useState('')
   const onChange = (event) => {
-    setVal(event.target.value)
+    setValue(event.target.value)
   }
-  return [type, val, onChange]
+  const reset = () => { setValue('') }
+  return { type, value, onChange, reset }
 }
