@@ -1,12 +1,10 @@
 import { useState } from "react";
-import blogService from "../services/blogs";
-import { useNotify } from "../hooks/useNotify";
-
-const Blog = ({ blog, handleUpdate, loggedUser, handleDelete }) => {
-  const notify = useNotify();
+import { useBlogs } from "../hooks/useBlogs";
+const Blog = ({ blog, loggedUser }) => {
   const [visible, setVisible] = useState(false);
   const hideWhenVisible = { display: visible ? "none" : "" };
   const showWhenVisible = { display: visible ? "" : "none" };
+  const [, { likeBlog, removeBlog }] = useBlogs();
 
   const blogStyle = {
     paddingTop: 10,
@@ -20,41 +18,6 @@ const Blog = ({ blog, handleUpdate, loggedUser, handleDelete }) => {
     setVisible(!visible);
   };
 
-  const addLike = () => {
-    const newBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-    };
-    blogService
-      .update(newBlog)
-      .then((returnedBlog) => {
-        notify({
-          type: "success",
-          text: `blog ${returnedBlog.title} by ${returnedBlog.author} was liked`,
-        });
-        handleUpdate(returnedBlog);
-      })
-      .catch((e) => {
-        notify({ type: "error", text: e.message });
-      });
-  };
-  const removeBlog = () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      blogService
-        .remove(blog.id)
-        .then(() => {
-          notify({
-            type: "delete",
-            text: `blog ${blog.title} by ${blog.author} was deleted`,
-          });
-          handleDelete(blog);
-        })
-        .catch((error) => {
-          console.log(error);
-          notify({ type: "error", text: `error deleting note` });
-        });
-    }
-  };
   return (
     <div style={blogStyle}>
       <div style={hideWhenVisible} data-testid="visible">
@@ -70,14 +33,14 @@ const Blog = ({ blog, handleUpdate, loggedUser, handleDelete }) => {
         {blog.url}
         <br />
         {blog.likes}{" "}
-        <button onClick={addLike} data-testid="button-like">
+        <button onClick={() => likeBlog(blog)} data-testid="button-like">
           Like
         </button>
         <br />
         {blog.user?.username}
         <br />
         {blog.user?.username === loggedUser.username && (
-          <button onClick={removeBlog}>Delete</button>
+          <button onClick={() => removeBlog(blog)}>Delete</button>
         )}
       </div>
     </div>

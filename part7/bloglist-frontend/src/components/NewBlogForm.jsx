@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react";
 import Togglable from "./Togglable";
+import { useBlogs } from "../hooks/useBlogs";
 
-const NewBlogForm = ({ returnToParent }) => {
+const NewBlogForm = () => {
   const handleChange = (e, field) => {
     const val = e.target.value;
     switch (field) {
@@ -16,6 +17,7 @@ const NewBlogForm = ({ returnToParent }) => {
         break;
     }
   };
+  const [, { addNewBlog }] = useBlogs();
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
@@ -23,7 +25,7 @@ const NewBlogForm = ({ returnToParent }) => {
   const newBlogFormRef = useRef();
 
   const formSubmit = () => {
-    returnToParent(author, title, url);
+    addNewBlog(author, title, url);
     newBlogFormRef.current.toggleVisibility();
     setAuthor("");
     setTitle("");

@@ -1,11 +1,8 @@
+import { useBlogs } from "../hooks/useBlogs";
 import Blog from "./Blog";
 
-export const Blogs = ({
-  blogs,
-  handleUpdate,
-  handleDelete,
-  user,
-}) => {
+export const Blogs = ({ user }) => {
+  const [blogs] = useBlogs();
   if (!user) return;
   return (
     <div>
@@ -14,8 +11,6 @@ export const Blogs = ({
         <Blog
           key={blog.id}
           blog={blog}
-          handleUpdate={handleUpdate}
-          handleDelete={handleDelete}
           loggedUser={user}
         />
       ))}

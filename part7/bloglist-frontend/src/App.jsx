@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import _ from "lodash";
@@ -8,20 +7,15 @@ import NewBlogForm from "./components/NewBlogForm";
 import { useNotify } from "./hooks/useNotify";
 import Notification from "./components/Notification";
 import { Blogs } from "./components/Blogs";
+import { useBlogs } from "./hooks/useBlogs";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
   const notify = useNotify();
 
-  useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(_.orderBy(blogs, "likes", "desc")));
-  }, []);
   useEffect(() => {
     const loggedUserJson = window.localStorage.getItem("loggedBlogUser");
     if (loggedUserJson) {
@@ -90,79 +84,11 @@ const App = () => {
     }
   };
 
-  const handleNewBlog = (title, author, url) => {
-    if (!author || !title || !url) {
-      notify({ type: "error", msg: "Required field(s) missing" });
-    }
-    const newBlog = {
-      author: author,
-      title: title,
-      url: url,
-    };
-    blogService
-      .add(newBlog)
-      .then((returnedBlog) => {
-        const newBlogs = blogs.concat(returnedBlog);
-        setBlogs(_.orderBy(newBlogs, "likes", "desc"));
-        notify({
-          type: "success",
-          msg: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-        });
-      })
-      .catch((e) => {
-        notify({ type: "error", msg: e.message });
-      });
-  };
-
-  const handleUpdate = (updatedBlog) => {
-    const newBlogArray = blogs
-      .filter((blog) => blog.id !== updatedBlog.id)
-      .concat(updatedBlog);
-    setBlogs(_.orderBy(newBlogArray, "likes", "desc"));
-  };
-  const handleDelete = (deletedBlog) => {
-    const newBlogArray = blogs.filter((blog) => blog.id !== deletedBlog.id);
-    setBlogs(_.orderBy(newBlogArray, "likes", "desc"));
-  };
-  //   const style =
-  //     message.type === "success"
-  //       ? {
-  //           backgroundColor: " #e6ffe6",
-  //           color: "#003300",
-  //           borderColor: "#003300",
-  //         }
-  //       : message.type === "error"
-  //         ? {
-  //             backgroundColor: " #ffe6e6",
-  //             color: "#660000",
-  //             borderColor: "#660000",
-  //           }
-  //         : message.type === "delete"
-  //           ? {
-  //               backgroundColor: "rgb(255, 255, 230)",
-  //               color: "rgb(131, 131, 0)",
-  //               borderColor: "rgb(131, 131, 0)",
-  //             }
-  //           : { display: "none" };
-  //   return (
-  //     <div
-  //       style={{
-  //         ...style,
-  //         borderStyle: "solid",
-  //         borderRadius: "5px",
-  //         padding: "5px",
-  //       }}
-  //     >
-  //       <p>{message.text}</p>
-  //     </div>
-  //   );
-  // };
-
   return (
     <>
       <Notification />
       {user ? (
-        <NewBlogForm returnToParent={handleNewBlog} />
+        <NewBlogForm />
       ) : (
         <LoginForm
           handleChange={handleChange}
@@ -172,9 +98,6 @@ const App = () => {
         />
       )}
       <Blogs
-        blogs={blogs}
-        handleDelete={handleDelete}
-        handleUpdate={handleUpdate}
         user={user}
       />
       {user && (

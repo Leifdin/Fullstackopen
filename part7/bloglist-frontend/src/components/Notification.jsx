@@ -5,6 +5,7 @@ const Notification = () => {
     {
       error: "red",
       success: "green",
+      delete: "orange",
     }[notification.type] ?? "white";
   const style = {
     border: "solid",
@@ -13,7 +14,7 @@ const Notification = () => {
     background,
     position: "fixed",
     top: "10px",
-    right: '10px',
+    right: "10px",
     opacity: "0.75",
   };
   return (
