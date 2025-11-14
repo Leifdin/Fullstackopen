@@ -1,20 +1,19 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useContext, useEffect } from "react";
 import { useNotify } from "./useNotify";
 import { clearUser, setUser } from "../reducers/userReducer";
 import loginService from "../services/login";
 import blogService from "../services/blogs";
+import UserContext from "../context/UserContext";
 
 export const useLogin = () => {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const [user, dispatch] = useContext(UserContext) ?? [];
   const notify = useNotify();
   useEffect(() => {
     const loggedUserJson = window.localStorage.getItem("loggedBlogUser");
     if (loggedUserJson) {
       try {
         const user = JSON.parse(loggedUserJson);
-        dispatch(setUser(user));
+        dispatch({ type: "SET", payload: user });
         blogService.setToken(user.token);
       } catch {
         window.localStorage.clear();
