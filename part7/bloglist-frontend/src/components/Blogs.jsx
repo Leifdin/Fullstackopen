@@ -11,7 +11,6 @@ export const Blogs = ({ user }) => {
         <Blog
           key={blog.id}
           blog={blog}
-          loggedUser={user}
         />
       ))}
     </div>

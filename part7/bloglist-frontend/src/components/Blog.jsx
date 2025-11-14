@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useBlogs } from "../hooks/useBlogs";
-const Blog = ({ blog, loggedUser }) => {
+import { useLogin } from "../hooks/useLogin";
+const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false);
   const hideWhenVisible = { display: visible ? "none" : "" };
   const showWhenVisible = { display: visible ? "" : "none" };
   const [, { likeBlog, removeBlog }] = useBlogs();
+  const [user] = useLogin();
 
   const blogStyle = {
     paddingTop: 10,
@@ -37,9 +39,9 @@ const Blog = ({ blog, loggedUser }) => {
           Like
         </button>
         <br />
-        {blog.user?.username}
+        {user?.username}
         <br />
-        {blog.user?.username === loggedUser.username && (
+        {user?.username === user.username && (
           <button onClick={() => removeBlog(blog)}>Delete</button>
         )}
       </div>
