@@ -5,7 +5,10 @@ import { useLogin } from "../hooks/useLogin";
 const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [, { login }] = useLogin();
+  const [user, { login }] = useLogin();
+  if (user) {
+    return <p style={{ fontSize: "large" }}>{user.name} logged in</p>;
+  }
   return (
     <div>
       <h2>login</h2>

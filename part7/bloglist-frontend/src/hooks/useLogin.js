@@ -28,7 +28,6 @@ export const useLogin = () => {
   };
   const actions = {
     login: (username, password) => {
-      console.log("idem");
       if (!username || !password) {
         notify({
           type: "error",
