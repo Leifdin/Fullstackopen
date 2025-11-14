@@ -1,6 +1,6 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
-import { useNotify } from "../hooks.js/useNotify";
+import { useNotify } from "../hooks/useNotify";
 
 const Blog = ({ blog, handleUpdate, loggedUser, handleDelete }) => {
   const notify = useNotify();
