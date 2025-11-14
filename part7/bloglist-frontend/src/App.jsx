@@ -5,6 +5,7 @@ import Notification from "./components/Notification";
 import { Blogs } from "./components/Blogs";
 import { useLogin } from "./hooks/useLogin";
 import { Routes, Route, Link, useMatch, useNavigate } from "react-router-dom";
+import { Viewer } from "./views/Viewer";
 
 const App = () => {
   const [user, { logout }] = useLogin();
@@ -13,7 +14,7 @@ const App = () => {
       <Notification />
       <h2>blogs</h2>
       <LoginForm />
-      <Blogs user={user} />
+      <Viewer />
       {user && <button onClick={logout}>Logout</button>}
     </>
   );

@@ -1,11 +1,13 @@
+import { Blogs } from "../components/Blogs";
 import NewBlogForm from "../components/NewBlogForm";
 import { useLogin } from "../hooks/useLogin";
 
-const Home = () => {
-  const [user, { logout }] = useLogin();
+export const Home = () => {
+  const [user] = useLogin();
   return (
     <>
-      user && <NewBlogForm />
+      {user && <NewBlogForm />}
+      <Blogs user={user} />
     </>
   );
 };
