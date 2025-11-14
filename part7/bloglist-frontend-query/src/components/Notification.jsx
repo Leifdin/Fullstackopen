@@ -1,6 +1,7 @@
-import { useSelector } from "react-redux";
+import { useContext } from "react";
+import NotificationContext from "../context/NotificationContext";
 const Notification = () => {
-  const notification = useSelector((state) => state.notification);
+  const [notification] = useContext(NotificationContext);
   const background =
     {
       error: "red",

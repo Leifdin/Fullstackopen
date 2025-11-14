@@ -1,15 +1,14 @@
-import { useDispatch } from "react-redux";
-import {
-  clearNotification,
-  setNotification,
-} from "../reducers/notificationReducer";
+import { useContext } from "react";
+import NotificationContext from "../context/NotificationContext";
 
 export const useNotify = () => {
-  const dispatch = useDispatch();
+  const context = useContext(NotificationContext);
+
   const notify = (msg, timeout = 5000) => {
-    dispatch(setNotification(msg));
+    const [, notificationReducer] = context;
+    notificationReducer({ type: "SET", payload: msg });
     setTimeout(() => {
-      dispatch(clearNotification());
+      notificationReducer({ type: "CLEAR" });
     }, timeout);
   };
   return notify;
