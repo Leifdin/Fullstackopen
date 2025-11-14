@@ -12,8 +12,8 @@ const Navbar = () => {
     padding: 10px;
     &:hover,
     &:focus {
-      background: #838383ff;
-      color: #c4c4c4ff;
+      background: #c0c0c0ff;
+      color: black;
     }
   `;
   const NavDiv = styled.div`
