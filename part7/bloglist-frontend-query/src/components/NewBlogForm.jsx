@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import Togglable from "./Togglable";
-import { useBlogs } from "../hooks/useBlogs";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import blogService from "../services/blogs";
+import { useNotify } from "../hooks/useNotify";
 
 const NewBlogForm = () => {
   const handleChange = (e, field) => {
@@ -17,19 +19,40 @@ const NewBlogForm = () => {
         break;
     }
   };
-  const [, { addNewBlog }] = useBlogs();
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
+  const notify = useNotify();
 
   const newBlogFormRef = useRef();
-
+  const queryClient = useQueryClient();
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.add,
+    onSuccess: (returnedBlog) => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      notify({
+        type: "success",
+        msg: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+      });
+    },
+    onError: (error) => {
+      notify({ type: "error", msg: error.message });
+    },
+  });
   const formSubmit = () => {
-    addNewBlog(author, title, url);
-    newBlogFormRef.current.toggleVisibility();
+    if (!author || !title || !url) {
+      notify({ type: "error", msg: "Required field(s) missing" });
+      return;
+    }
     setAuthor("");
     setTitle("");
     setUrl("");
+    const newBlog = {
+      author: author,
+      title: title,
+      url: url,
+    };
+    newBlogMutation.mutate(newBlog);
   };
 
   return (

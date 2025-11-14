@@ -1,12 +1,42 @@
 import { useState } from "react";
 import { useBlogs } from "../hooks/useBlogs";
 import { useLogin } from "../hooks/useLogin";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import blogService from "../services/blogs";
+import { useNotify } from "../hooks/useNotify";
 const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false);
   const hideWhenVisible = { display: visible ? "none" : "" };
   const showWhenVisible = { display: visible ? "" : "none" };
-  const [, { likeBlog, removeBlog }] = useBlogs();
   const [user] = useLogin();
+  const queryClient = useQueryClient();
+  const notify = useNotify();
+  const delBlogMutation = useMutation({
+    mutationFn: blogService.remove,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      notify({
+        type: "delete",
+        msg: `blog ${blog.title} by ${blog.author} was deleted`,
+      });
+    },
+    onError: (error) => {
+      notify({ type: "error", msg: error.message });
+    },
+  });
+  const likeBlogMutation = useMutation({
+    mutationFn: blogService.update,
+    onSuccess: (returnedBlog) => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      notify({
+        type: "success",
+        msg: `blog ${returnedBlog.title} by ${returnedBlog.author} was liked`,
+      });
+    },
+    onError: (error) => {
+      notify({ type: "error", msg: error.message });
+    },
+  });
 
   const blogStyle = {
     paddingTop: 10,
@@ -18,6 +48,14 @@ const Blog = ({ blog }) => {
 
   const toggleVisibility = () => {
     setVisible(!visible);
+  };
+
+  const likeBlog = () => {
+    const newBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+    };
+    likeBlogMutation.mutate(newBlog);
   };
 
   return (
@@ -35,14 +73,16 @@ const Blog = ({ blog }) => {
         {blog.url}
         <br />
         {blog.likes}{" "}
-        <button onClick={() => likeBlog(blog)} data-testid="button-like">
+        <button onClick={likeBlog} data-testid="button-like">
           Like
         </button>
         <br />
         {user?.username}
         <br />
         {user?.username === user.username && (
-          <button onClick={() => removeBlog(blog)}>Delete</button>
+          <button onClick={() => delBlogMutation.mutate(blog.id)}>
+            Delete
+          </button>
         )}
       </div>
     </div>
