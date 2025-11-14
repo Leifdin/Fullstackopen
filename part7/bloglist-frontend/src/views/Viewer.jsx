@@ -11,7 +11,7 @@ export const Viewer = () => {
   const users = useResource("http://localhost:3000/api/users", []);
   const matchUser = useMatch("/users/:id");
   const user = matchUser
-    ? users.find((us) => us.id === Number(matchUser.params.id))
+    ? users.find((us) => us.id === matchUser.params.id)
     : {};
   const [blogs] = useBlogs();
   const matchBlog = useMatch("/blogs/:id");

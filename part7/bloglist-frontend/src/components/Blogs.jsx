@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import { useBlogs } from "../hooks/useBlogs";
-import Blog from "./Blog";
 
 export const Blogs = ({ user }) => {
   const [blogs] = useBlogs();

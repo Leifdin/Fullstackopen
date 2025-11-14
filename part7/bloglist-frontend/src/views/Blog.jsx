@@ -3,11 +3,14 @@ import { useResource } from "../hooks/useResource";
 import _ from "lodash";
 import { useBlogs } from "../hooks/useBlogs";
 import { useLogin } from "../hooks/useLogin";
+import { useState } from "react";
 
 const Blog = ({ blog }) => {
   const params = useParams();
-  const [, { likeBlog, removeBlog }] = useBlogs();
+  const [, { likeBlog, removeBlog, addComment }] = useBlogs();
   const [user] = useLogin();
+  const [newComment, setNewComment] = useState("");
+
   if (!blog) return <div>User not found</div>;
   if (_.isEmpty(blog)) return <div>loading...</div>;
   const blogStyle = {
@@ -34,6 +37,35 @@ const Blog = ({ blog }) => {
         {user?.username === user.username && (
           <button onClick={() => removeBlog(blog)}>Delete</button>
         )}
+      </div>
+      <div>
+        <div>
+          <h2>comments</h2>
+          {blog.comments.length > 0 ? (
+            <ul>
+              {blog.comments.map((comment) => (
+                <li key={comment}>{comment}</li>
+              ))}
+            </ul>
+          ) : (
+            <>no comments yet</>
+          )}
+        </div>
+        <div>
+          <input
+            value={newComment}
+            placeholder="add new comment"
+            onChange={(e) => setNewComment(e.target.value)}
+          />
+          <button
+            onClick={() => {
+              addComment(blog, newComment);
+              setNewComment("");
+            }}
+          >
+            submit comment
+          </button>
+        </div>
       </div>
     </div>
   );

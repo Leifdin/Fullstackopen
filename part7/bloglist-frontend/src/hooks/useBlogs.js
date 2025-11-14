@@ -14,7 +14,13 @@ export const useBlogs = () => {
   const blogs = useSelector((state) => state.blogs);
   const notify = useNotify();
   useEffect(() => {
-    blogService.getAll().then((blogs) => dispatch(setBlogs(blogs)));
+    blogService
+      .getAll()
+      .then((blogs) =>
+        dispatch(
+          setBlogs(blogs.map((blog) => ({ ...blog, comments: ["komentar"] }))),
+        ),
+      );
   }, [dispatch]);
 
   const actions = {
@@ -35,6 +41,17 @@ export const useBlogs = () => {
         .catch((e) => {
           notify({ type: "error", msg: e.message });
         });
+    },
+    addComment: (blog, comment) => {
+      const newBlog = {
+        ...blog,
+        comments: blog.comments.concat(comment),
+      };
+      notify({
+        type: "success",
+        msg: `comment ${comment} on blog ${blog.title} was added`,
+      });
+      dispatch(updateBlogs(newBlog));
     },
     addNewBlog: (title, author, url) => {
       if (!author || !title || !url) {
