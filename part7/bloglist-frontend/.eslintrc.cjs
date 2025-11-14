@@ -11,6 +11,7 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
     'plugin:vitest-globals/recommended',
+    //`plugin:prettier/recommended`,
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
@@ -21,14 +22,14 @@ module.exports = {
         "error",
         "unix"
     ],
-    "quotes": [
-        "error",
-        "single"
-    ],
-    "semi": [
-        "error",
-        "never"
-    ],
+    // "quotes": [
+    //     "error",
+    //     "single"
+    // ],
+    // "semi": [
+    //     "error",
+    //     "never"
+    // ],
     "eqeqeq": "error",
     "no-trailing-spaces": "error",
     "object-curly-spacing": [

@@ -1,13 +1,9 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
+import { useNotify } from "../hooks.js/useNotify";
 
-const Blog = ({
-  blog,
-  handleMessage,
-  handleUpdate,
-  loggedUser,
-  handleDelete,
-}) => {
+const Blog = ({ blog, handleUpdate, loggedUser, handleDelete }) => {
+  const notify = useNotify();
   const [visible, setVisible] = useState(false);
   const hideWhenVisible = { display: visible ? "none" : "" };
   const showWhenVisible = { display: visible ? "" : "none" };
@@ -32,14 +28,14 @@ const Blog = ({
     blogService
       .update(newBlog)
       .then((returnedBlog) => {
-        handleMessage({
+        notify({
           type: "success",
           text: `blog ${returnedBlog.title} by ${returnedBlog.author} was liked`,
         });
         handleUpdate(returnedBlog);
       })
       .catch((e) => {
-        handleMessage({ type: "error", text: e.message });
+        notify({ type: "error", text: e.message });
       });
   };
   const removeBlog = () => {
@@ -47,7 +43,7 @@ const Blog = ({
       blogService
         .remove(blog.id)
         .then(() => {
-          handleMessage({
+          notify({
             type: "delete",
             text: `blog ${blog.title} by ${blog.author} was deleted`,
           });
@@ -55,7 +51,7 @@ const Blog = ({
         })
         .catch((error) => {
           console.log(error);
-          handleMessage({ type: "error", text: `error deleting note` });
+          notify({ type: "error", text: `error deleting note` });
         });
     }
   };

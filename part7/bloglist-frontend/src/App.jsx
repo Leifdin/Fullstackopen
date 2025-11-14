@@ -5,11 +5,8 @@ import loginService from "./services/login";
 import _ from "lodash";
 import LoginForm from "./components/LoginForm";
 import NewBlogForm from "./components/NewBlogForm";
-
-const initMessage = {
-  text: "",
-  type: "",
-};
+import { useNotify } from "./hooks.js/useNotify";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -17,7 +14,7 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const [message, setMessage] = useState(initMessage);
+  const notify = useNotify();
 
   useEffect(() => {
     blogService
@@ -53,9 +50,9 @@ const App = () => {
     switch (action) {
       case "login":
         if (!username || !password) {
-          handleMessage({
+          notify({
             type: "error",
-            text: "username or password missing",
+            msg: "username or password missing",
           });
           return;
         }
@@ -70,16 +67,16 @@ const App = () => {
             blogService.setToken(userData.token);
             setTimeout(() => {
               handleAction(event, "logout");
-              handleMessage({
+              notify({
                 type: "delete",
-                text: "user has been logged out",
+                msg: "user has been logged out",
               });
             }, [60 * 60 * 1000]);
           })
           .catch((e) => {
-            handleMessage({
+            notify({
               type: "error",
-              text: "invalid username or password",
+              msg: "invalid username or password",
             });
           });
         break;
@@ -114,7 +111,6 @@ const App = () => {
             <Blog
               key={blog.id}
               blog={blog}
-              handleMessage={handleMessage}
               handleUpdate={handleUpdate}
               handleDelete={handleDelete}
               loggedUser={user}
@@ -128,7 +124,7 @@ const App = () => {
 
   const handleNewBlog = (title, author, url) => {
     if (!author || !title || !url) {
-      handleMessage({ type: "error", text: "Required field(s) missing" });
+      notify({ type: "error", msg: "Required field(s) missing" });
     }
     const newBlog = {
       author: author,
@@ -140,13 +136,13 @@ const App = () => {
       .then((returnedBlog) => {
         const newBlogs = blogs.concat(returnedBlog);
         setBlogs(_.orderBy(newBlogs, "likes", "desc"));
-        handleMessage({
+        notify({
           type: "success",
-          text: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+          msg: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
         });
       })
       .catch((e) => {
-        handleMessage({ type: "error", text: e.message });
+        notify({ type: "error", msg: e.message });
       });
   };
 
@@ -161,54 +157,47 @@ const App = () => {
       .concat(updatedBlog);
     setBlogs(_.orderBy(newBlogArray, "likes", "desc"));
   };
-  const handleMessage = (message) => {
-    setMessage(message);
-    setTimeout(() => {
-      setMessage(initMessage);
-    }, 10000);
-  };
   const handleDelete = (deletedBlog) => {
     const newBlogArray = blogs.filter((blog) => blog.id !== deletedBlog.id);
     setBlogs(_.orderBy(newBlogArray, "likes", "desc"));
   };
-  const renderMessage = () => {
-    const style =
-      message.type === "success"
-        ? {
-            backgroundColor: " #e6ffe6",
-            color: "#003300",
-            borderColor: "#003300",
-          }
-        : message.type === "error"
-          ? {
-              backgroundColor: " #ffe6e6",
-              color: "#660000",
-              borderColor: "#660000",
-            }
-          : message.type === "delete"
-            ? {
-                backgroundColor: "rgb(255, 255, 230)",
-                color: "rgb(131, 131, 0)",
-                borderColor: "rgb(131, 131, 0)",
-              }
-            : { display: "none" };
-    return (
-      <div
-        style={{
-          ...style,
-          borderStyle: "solid",
-          borderRadius: "5px",
-          padding: "5px",
-        }}
-      >
-        <p>{message.text}</p>
-      </div>
-    );
-  };
+  //   const style =
+  //     message.type === "success"
+  //       ? {
+  //           backgroundColor: " #e6ffe6",
+  //           color: "#003300",
+  //           borderColor: "#003300",
+  //         }
+  //       : message.type === "error"
+  //         ? {
+  //             backgroundColor: " #ffe6e6",
+  //             color: "#660000",
+  //             borderColor: "#660000",
+  //           }
+  //         : message.type === "delete"
+  //           ? {
+  //               backgroundColor: "rgb(255, 255, 230)",
+  //               color: "rgb(131, 131, 0)",
+  //               borderColor: "rgb(131, 131, 0)",
+  //             }
+  //           : { display: "none" };
+  //   return (
+  //     <div
+  //       style={{
+  //         ...style,
+  //         borderStyle: "solid",
+  //         borderRadius: "5px",
+  //         padding: "5px",
+  //       }}
+  //     >
+  //       <p>{message.text}</p>
+  //     </div>
+  //   );
+  // };
 
   return (
     <>
-      {renderMessage()}
+      <Notification />
       {renderLogin()}
       {renderNewBlog()}
       {renderContent()}
