@@ -1,6 +1,11 @@
 import React from "react";
+import { useState } from "react";
+import { useLogin } from "../hooks/useLogin";
 
-const LoginForm = ({ handleChange, handleAction, username, password }) => {
+const LoginForm = () => {
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [, { login }] = useLogin();
   return (
     <div>
       <h2>login</h2>
@@ -9,7 +14,7 @@ const LoginForm = ({ handleChange, handleAction, username, password }) => {
         <input
           data-testid="username"
           value={username}
-          onChange={(e) => handleChange(e, "username")}
+          onChange={(e) => setUsername(e.target.value)}
         />
       </label>
       <label>
@@ -17,14 +22,14 @@ const LoginForm = ({ handleChange, handleAction, username, password }) => {
         <input
           data-testid="password"
           value={password}
-          onChange={(e) => handleChange(e, "password")}
+          onChange={(e) => setPassword(e.target.value)}
           type="password"
         />
       </label>
       <br />
       <button
         data-testid="login-confirm"
-        onClick={(e) => handleAction(e, "login")}
+        onClick={() => login(username, password)}
       >
         Submit
       </button>
