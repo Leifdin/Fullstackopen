@@ -10,6 +10,8 @@ import {
   initNotification,
   notificationReducer,
 } from "./reducers/newNotificationReducer";
+import { useQuery } from "@tanstack/react-query";
+import { getAllBlogs } from "./requests";
 
 const App = () => {
   const [user, { logout }] = useLogin();
@@ -17,6 +19,18 @@ const App = () => {
     notificationReducer,
     initNotification,
   );
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ["blogs"],
+    queryFn: getAllBlogs,
+  });
+  if (isPending) {
+    return <div>loading...</div>;
+  }
+  if (isError) {
+    console.log(error);
+    return <div>blogs service is not available due to problems in server</div>;
+  }
+  console.log(data);
 
   return (
     <>
@@ -25,7 +39,7 @@ const App = () => {
       >
         <Notification />
         {user ? <NewBlogForm /> : <LoginForm />}
-        <Blogs user={user} />
+        <Blogs user={user} data={data} />
         {user && <button onClick={logout}>Logout</button>}
       </NotificationContext.Provider>
     </>
