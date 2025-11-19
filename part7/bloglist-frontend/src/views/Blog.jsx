@@ -4,44 +4,41 @@ import _ from "lodash";
 import { useBlogs } from "../hooks/useBlogs";
 import { useLogin } from "../hooks/useLogin";
 import { useState } from "react";
+import {
+  BlogLink,
+  Button,
+  H3,
+  H4,
+  Input,
+} from "../components/StyledComponents";
 
 const Blog = ({ blog }) => {
-  const params = useParams();
   const [, { likeBlog, removeBlog, addComment }] = useBlogs();
   const [user] = useLogin();
   const [newComment, setNewComment] = useState("");
 
   if (!blog) return <div>User not found</div>;
   if (_.isEmpty(blog)) return <div>loading...</div>;
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
   return (
-    <div style={blogStyle}>
+    <div>
       <div>
-        {blog.author}
+        <H3>{blog.title}</H3>
+        <H4> by {blog.author}</H4>
         <br />
-        {blog.url}
+        <BlogLink>{blog.url}</BlogLink>
         <br />
-        {blog.likes}{" "}
-        <button onClick={() => likeBlog(blog)} data-testid="button-like">
+        Likes: {blog.likes} <br />
+        <Button onClick={() => likeBlog(blog)} data-testid="button-like">
           Like
-        </button>
-        <br />
-        {user?.username}
-        <br />
-        {user?.username === user.username && (
-          <button onClick={() => removeBlog(blog)}>Delete</button>
+        </Button>
+        {user &&  user.username === user.username && (
+          <Button onClick={() => removeBlog(blog)}>Delete</Button>
         )}
       </div>
       <div>
         <div>
-          <h2>comments</h2>
-          {blog.comments.length > 0 ? (
+          <H3>comments</H3>
+          {blog?.comments?.length > 0 ? (
             <ul>
               {blog.comments.map((comment) => (
                 <li key={comment}>{comment}</li>
@@ -52,19 +49,19 @@ const Blog = ({ blog }) => {
           )}
         </div>
         <div>
-          <input
+          <Input
             value={newComment}
             placeholder="add new comment"
             onChange={(e) => setNewComment(e.target.value)}
           />
-          <button
+          <Button
             onClick={() => {
               addComment(blog, newComment);
               setNewComment("");
             }}
           >
             submit comment
-          </button>
+          </Button>
         </div>
       </div>
     </div>

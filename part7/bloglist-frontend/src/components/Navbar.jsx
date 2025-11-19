@@ -1,8 +1,7 @@
 import React from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import styled from "styled-components";
 const Navbar = () => {
-  const navigate = useNavigate();
   const NavLink = styled(Link)`
     font-size: 1.5em;
     color: white;
@@ -18,8 +17,7 @@ const Navbar = () => {
   `;
   const NavDiv = styled.div`
     display: flex;
-    flex-flow: row;
-    padding: 5px;
+    flex-flow: row; 
     background: #505050;
   `;
   return (

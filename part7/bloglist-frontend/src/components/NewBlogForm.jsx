@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import Togglable from "./Togglable";
 import { useBlogs } from "../hooks/useBlogs";
+import { Button, H3, Input, Label } from "./StyledComponents";
+import { Col, Row, Container } from "react-bootstrap";
 
 const NewBlogForm = () => {
   const handleChange = (e, field) => {
@@ -34,37 +36,51 @@ const NewBlogForm = () => {
 
   return (
     <Togglable buttonLabel="New blog" ref={newBlogFormRef}>
-      <h2>new blog</h2>
-      <label>
-        title:{" "}
-        <input
-          value={title}
-          onChange={(e) => handleChange(e, "title")}
-          data-testid="input-title"
-        />
-      </label>
+      <H3>new blog</H3>
+      {/* <Container fluid> */}
+      <div>
+        <Row>
+          <Col md="2" lg="1">
+            <Label>title: </Label>
+          </Col>
+          <Col md="2" lg="1">
+            <Input
+              value={title}
+              onChange={(e) => handleChange(e, "title")}
+              data-testid="Input-title"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md="2" lg="1">
+            <Label>author: </Label>
+          </Col>
+          <Col md="2" lg="1">
+            <Input
+              value={author}
+              onChange={(e) => handleChange(e, "author")}
+              data-testid="Input-author"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md="2" lg="1">
+            <Label>url: </Label>
+          </Col>
+          <Col md="2" lg="1">
+            <Input
+              value={url}
+              onChange={(e) => handleChange(e, "url")}
+              data-testid="Input-url"
+            />
+          </Col>
+        </Row>
+      </div>
+      {/* </Container>   */}
       <br />
-      <label>
-        author:{" "}
-        <input
-          value={author}
-          onChange={(e) => handleChange(e, "author")}
-          data-testid="input-author"
-        />
-      </label>
-      <br />
-      <label>
-        url:{" "}
-        <input
-          value={url}
-          onChange={(e) => handleChange(e, "url")}
-          data-testid="input-url"
-        />
-      </label>
-      <br />
-      <button onClick={formSubmit} data-testid="button-submit">
+      <Button onClick={formSubmit} data-testid="button-submit">
         Submit new blog
-      </button>
+      </Button>
     </Togglable>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
+import { Button, H3, Input, Label } from "./StyledComponents";
 
 const LoginForm = () => {
   const [password, setPassword] = useState("");
@@ -11,31 +12,31 @@ const LoginForm = () => {
   }
   return (
     <div>
-      <h2>login</h2>
-      <label>
+      <H3>login</H3>
+      <Label>
         Username:{" "}
-        <input
+        <Input
           data-testid="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-      </label>
-      <label>
+      </Label>
+      <Label>
         Password:{" "}
-        <input
+        <Input
           data-testid="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
         />
-      </label>
+      </Label>
       <br />
-      <button
+      <Button
         data-testid="login-confirm"
         onClick={() => login(username, password)}
       >
         Submit
-      </button>
+      </Button>
     </div>
   );
 };

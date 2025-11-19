@@ -1,31 +1,34 @@
 import React from "react";
-import { Link } from "react-router";
+import { Table } from "react-bootstrap";
+import { Link, useNavigate } from "react-router";
+import { H3, TableCell } from "../components/StyledComponents";
 
 const Users = ({ users }) => {
+  const navigate = useNavigate();
   if (!users) return <>loading...</>;
   return (
     <div>
-      <h2>Users</h2>
-
-      <table>
+      <H3>Users</H3>
+      <Table striped bordered hover>
         <thead>
           <tr>
-            <td></td>
-            <td>blogs created</td>
+            <th>User</th>
+            <th>Blogs created</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td>
-                {/* <a href={`/users/${user.id}`}>{user.name}</a> */}
-                <Link to={`/users/${user.id}`}>{user.name}</Link>
-              </td>
-              <td>{user.blogs?.length}</td>
+              <TableCell onClick={() => navigate(`/users/${user.id}`)}>
+                {user.name}
+              </TableCell>
+              <TableCell onClick={() => navigate(`/users/${user.id}`)}>
+                {user.blogs?.length}
+              </TableCell>
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 };
